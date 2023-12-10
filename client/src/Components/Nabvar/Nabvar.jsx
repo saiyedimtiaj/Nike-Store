@@ -28,7 +28,7 @@ export function Nabvar() {
             ? ""
             : isActive
             ? "text-red-700"
-            : "flex items-center gap-x-2 p-1 text-black font-medium"
+            : "flex items-center gap-x-1 p-1 text-black font-medium"
         }
       >
         Home
@@ -40,7 +40,7 @@ export function Nabvar() {
             ? ""
             : isActive
             ? "text-red-700"
-            : "flex items-center gap-x-2 p-1 text-black font-medium"
+            : "flex items-center gap-x-1 p-1 text-black font-medium"
         }
       >
         Product
@@ -52,7 +52,7 @@ export function Nabvar() {
     <Navbar className="mx-auto max-w-screen-xl px-4 py-2 shadow-none rounded-none lg:px-8 lg:py-4">
       <div className="container mx-auto flex items-center justify-between text-blue-gray-900">
         <Typography className="mr-4 cursor-pointer py-1.5 font-medium">
-          <img src={logo} className="h-6" alt="" />
+          <img src={logo} className="h-3 md:h-5 lg:h-6" alt="" />
         </Typography>
         <div className="hidden lg:block">{navList}</div>
         <div className="flex items-center gap-x-1">

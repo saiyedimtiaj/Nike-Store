@@ -1,10 +1,12 @@
+import { Outlet } from "react-router-dom";
 import { Nabvar } from "../Components/Nabvar/Nabvar";
 
 
 const MainLayout = () => {
     return (
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto font-Afacad">
             <Nabvar/>
+            <Outlet/>
         </div>
     );
 };
