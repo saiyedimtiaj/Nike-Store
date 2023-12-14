@@ -6,7 +6,7 @@ const TopSeller = () => {
   const axios = useAxiosPublic()
 
   const { data:products=[] } = useQuery({
-    queryKey: ['repoData'],
+    queryKey: ['Top-sell'],
     queryFn: () =>
       axios.get('/products')
       .then(res=>res.data)
