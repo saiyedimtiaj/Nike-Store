@@ -7,7 +7,8 @@ import {
   Button,
   IconButton,
 } from "@material-tailwind/react";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
+import { MdShoppingCart } from "react-icons/md";
 
 export function Nabvar() {
   const [openNav, setOpenNav] = React.useState(false);
@@ -18,6 +19,8 @@ export function Nabvar() {
       () => window.innerWidth >= 960 && setOpenNav(false)
     );
   }, []);
+
+  //Collapse
 
   const navList = (
     <ul className="mt-2 mb-4 flex flex-col gap-2 lg:mb-0 font-medium lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
@@ -55,7 +58,8 @@ export function Nabvar() {
           <img src={logo} className="h-3 md:h-5 lg:h-6" alt="" />
         </Typography>
         <div className="hidden lg:block">{navList}</div>
-        <div className="flex items-center gap-x-1">
+        <div className="flex items-center gap-x-2">
+          <Link to='/cart'><MdShoppingCart className="text-xl" /></Link>
           <Button
             variant="gradient"
             size="sm"

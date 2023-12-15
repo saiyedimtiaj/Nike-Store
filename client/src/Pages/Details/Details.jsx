@@ -9,7 +9,9 @@ import { useState } from "react";
 const Details = () => {
   const axios = useAxiosPublic();
   const { id } = useParams();
-  const sizes = [
+  const [selectedSize, setSelectedSize] = useState(null);
+  const [message,setMessage] = useState('')
+  const allSizes = [
     "UK 6",
     "UK 6.5",
     "UK 7",
@@ -24,17 +26,31 @@ const Details = () => {
     "Uk 11.5",
   ];
   const haveSize = ["UK 6", "UK 6.5"];
-  const [selectedSize, setSelectedSize] = useState(null);
 
   const handleSizeClick = (size) => {
     setSelectedSize(size);
-    console.log(size);
+    setMessage(null)
   };
 
   const { data: product = [] } = useQuery({
     queryKey: ["single-product", id],
     queryFn: () => axios.get(`/products/${id}`).then((res) => res.data),
   });
+
+  const handleAddToCart = () => {
+    const cartItem = {
+      name: product?.name,
+      price: product?.price,
+      image: product.images[0],
+      size: selectedSize
+    }
+    if(selectedSize === null){
+      setMessage('Size selection is require')
+    }
+    else{
+      console.log(cartItem);
+    }
+  }
 
   return (
     <div className="max-w-6xl px-5 mt-10 flex gap-12 mb-16 mx-auto">
@@ -62,7 +78,7 @@ const Details = () => {
           </h1>
           <p className="font-semibold text-sm mt-8">Select Size</p>
           <div className="grid grid-cols-3 gap-2">
-            {sizes.map((size, index) => (
+            {allSizes.map((size, index) => (
               <button
                 disabled={!haveSize.includes(size)}
                 key={index}
@@ -79,7 +95,8 @@ const Details = () => {
               </button>
             ))}
           </div>
-          <button className="w-full py-3 rounded-full mt-4 text-sm bg-black text-white">
+          <p className="text-sm">{message}</p>
+          <button onClick={handleAddToCart} className="w-full py-3 rounded-full mt-4 text-sm bg-black text-white">
             Add to Cart
           </button>
 
