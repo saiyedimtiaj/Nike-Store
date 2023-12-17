@@ -27,7 +27,7 @@ const AllProducts = () => {
           <br />
         </div>
         <div className="flex-1">
-          <div className="border-2 flex justify-between py-4 px-3 items-center border-gray-600">
+          <div className="border-2 flex justify-between mb-5 py-4 px-3 items-center border-gray-600">
             <p>Showing 1-10 of 40</p>
             <div className="border-2 border-black">
               <select defaultValue='Sort By' className="px-4 py-1">

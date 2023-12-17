@@ -9,6 +9,7 @@ import {
 } from "@material-tailwind/react";
 import { Link, NavLink } from "react-router-dom";
 import { MdShoppingCart } from "react-icons/md";
+import { FaSearch } from "react-icons/fa";
 
 export function Nabvar() {
   const [openNav, setOpenNav] = React.useState(false);
@@ -60,6 +61,7 @@ export function Nabvar() {
         <div className="hidden lg:block">{navList}</div>
         <div className="flex items-center gap-x-2">
           <Link to='/cart'><MdShoppingCart className="text-xl" /></Link>
+          <FaSearch className="text-xl" />
           <Button
             variant="gradient"
             size="sm"
