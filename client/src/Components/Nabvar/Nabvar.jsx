@@ -1,4 +1,4 @@
-import React from "react";
+
 import logo from "../../assets/logo.png";
 import {
   Navbar,
@@ -10,11 +10,14 @@ import {
 import { Link, NavLink } from "react-router-dom";
 import { MdShoppingCart } from "react-icons/md";
 import { FaSearch } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import Search from "../Search/Search";
 
 export function Nabvar() {
-  const [openNav, setOpenNav] = React.useState(false);
+  const [openNav, setOpenNav] = useState(false);
+  const [showSearch,setShowSearch] = useState(false)
 
-  React.useEffect(() => {
+ useEffect(() => {
     window.addEventListener(
       "resize",
       () => window.innerWidth >= 960 && setOpenNav(false)
@@ -53,15 +56,16 @@ export function Nabvar() {
   );
 
   return (
-    <Navbar className="mx-auto max-w-screen-xl px-4 py-2 shadow-none rounded-none lg:px-8 lg:py-4">
+   <>
+     <Navbar className="mx-auto max-w-screen-xl px-4 py-2 shadow-none rounded-none lg:px-8 lg:py-4">
       <div className="container mx-auto flex items-center justify-between text-blue-gray-900">
         <Typography className="mr-4 cursor-pointer py-1.5 font-medium">
           <img src={logo} className="h-3 md:h-5 lg:h-6" alt="" />
         </Typography>
         <div className="hidden lg:block">{navList}</div>
-        <div className="flex items-center gap-x-2">
-          <Link to='/cart'><MdShoppingCart className="text-xl" /></Link>
-          <FaSearch className="text-xl" />
+        <div className="flex items-center gap-x-3">
+          <Link to='/cart'><MdShoppingCart className="text-2xl cursor-pointer" /></Link>
+          <button onClick={()=>setShowSearch(true)} className="cursor-pointer"><FaSearch className="text-xl" /></button>
           <Button
             variant="gradient"
             size="sm"
@@ -115,5 +119,7 @@ export function Nabvar() {
         <div className="container mx-auto">{navList}</div>
       </MobileNav>
     </Navbar>
+      {showSearch && <Search setShowSearch={setShowSearch}/>}
+   </>
   );
 }

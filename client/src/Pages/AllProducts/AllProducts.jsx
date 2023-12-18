@@ -12,7 +12,7 @@ const AllProducts = () => {
         <span className="text-xl"> > </span>
         <span className="text-red-700">Shop</span>
       </div>
-      <div className="flex gap-8 items-start">
+      <div className="flex flex-col md:flex-row gap-8 items-start">
         <div className="border-2 col-span-1 border-gray-600 py-6 px-5">
           <h1 className="text-lg font-semibold border-b-2 border-black pb-1">
             PRODUCT CATEGORIES
@@ -38,7 +38,13 @@ const AllProducts = () => {
               </select>
             </div>
           </div>
-          <div className="grid grid-cols-3 gap-5">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-5">
+            <ProductCard />
+            <ProductCard />
+            <ProductCard />
+            <ProductCard />
+            <ProductCard />
+            <ProductCard />
             <ProductCard />
             <ProductCard />
             <ProductCard />

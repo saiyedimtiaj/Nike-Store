@@ -4,7 +4,7 @@ import { Nabvar } from "../Components/Nabvar/Nabvar";
 
 const MainLayout = () => {
     return (
-        <div className="container mx-auto font-Afacad">
+        <div className="font-Afacad">
             <Nabvar/>
             <Outlet/>
         </div>

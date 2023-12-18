@@ -1,0 +1,9 @@
+.search-modal{
+    transform: translateY(100%);
+    animation: searchSlide 0.5s ease forwards;
+}
+
+@keyframes searchSlide {
+    0%{transform: translateY(100%);}
+    100%{transform: translateY(0%);}
+}

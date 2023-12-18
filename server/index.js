@@ -42,6 +42,18 @@ async function run() {
       res.send(result)
     })
 
+    app.get('/search-product',async(req,res)=>{
+      const searchQry = req.query.search;
+      const projection = {
+        _id: 1,
+        name: 1,
+        description:1,
+        images:1
+      };
+      const result = await allProductsColluction.find({ "name":{$regex: ".*"+searchQry+".*",$options:'i'} }).project(projection).toArray()
+      res.send(result)
+    })
+
     client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
