@@ -2,7 +2,7 @@
 import logo from "../../assets/logo.png";
 import {
   Navbar,
-  MobileNav,
+  Collapse,
   Typography,
   Button,
   IconButton,
@@ -115,9 +115,9 @@ export function Nabvar() {
           <span>Sign in</span>
         </Button>
       </div>
-      <MobileNav open={openNav}>
+      <Collapse open={openNav}>
         <div className="container mx-auto">{navList}</div>
-      </MobileNav>
+      </Collapse>
     </Navbar>
       {showSearch && <Search setShowSearch={setShowSearch}/>}
    </>

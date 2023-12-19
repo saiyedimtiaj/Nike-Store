@@ -54,6 +54,21 @@ async function run() {
       res.send(result)
     })
 
+    app.get('/allproduct',async(req,res)=>{
+      const projection = {
+        _id: 1,
+        name: 1,
+        description:1,
+        images:1,
+        price:1
+      };
+      const highest = req.query?.highest
+      const lowest = req.query?.lowest
+      // {"price":{$gte: 120, $lte: 150}}
+      const result = await allProductsColluction.find().project(projection).toArray()
+      res.send(result)
+    })
+
     client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
