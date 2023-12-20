@@ -60,15 +60,28 @@ async function run() {
         name: 1,
         description:1,
         images:1,
-        price:1
+        price:1,
+        category:1
       };
-      const highest = req.query?.highest
-      const lowest = req.query?.lowest
-      // {"price":{$gte: 120, $lte: 150}}
-      const result = await allProductsColluction.find().project(projection).toArray()
+      const catObj = {}
+      const sortObj = {}
+      const category = req.query.category;
+      if(req.query?.category){
+        catObj.category = category
+      }
+      const sortField = req.query.sortField;
+      const sortBy = req.query.sortBy;
+      if(sortField && sortBy){
+        sortObj[sortField] = sortBy
+      }
+      console.log(sortObj);
+      const result = await allProductsColluction.find(catObj).sort(sortObj).project(projection).toArray()
       res.send(result)
     })
 
+    // {"price":{$gte: 120, $lte: 150}}
+
+    
     client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {

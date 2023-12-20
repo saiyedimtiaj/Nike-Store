@@ -1,7 +1,6 @@
 /* eslint-disable react/prop-types */
 import { MdClose } from "react-icons/md";
 import "./search.css";
-import image from '../../assets/p1.png'
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import useAxiosPublic from "../../hooks/UseAxiosPublic";

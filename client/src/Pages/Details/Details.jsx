@@ -25,17 +25,18 @@ const Details = () => {
     "UK 11",
     "Uk 11.5",
   ];
-  const haveSize = ["UK 6", "UK 6.5"];
 
   const handleSizeClick = (size) => {
     setSelectedSize(size);
     setMessage(null)
   };
 
-  const { data: product = [] } = useQuery({
+  const { data: product = [],isPending } = useQuery({
     queryKey: ["single-product", id],
     queryFn: () => axios.get(`/products/${id}`).then((res) => res.data),
   });
+
+  const haveSize = product.sizes;
 
   const handleAddToCart = () => {
     const cartItem = {
@@ -50,6 +51,10 @@ const Details = () => {
     else{
       console.log(cartItem);
     }
+  }
+
+  if(isPending){
+    return <p>Loading......</p>
   }
 
   return (
