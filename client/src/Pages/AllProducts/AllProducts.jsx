@@ -3,6 +3,7 @@ import ProductCard from "../../Components/AllProduct/ProductCard/ProductCard";
 import { useQuery } from "@tanstack/react-query";
 import useAxiosPublic from "../../hooks/UseAxiosPublic";
 import { useState } from "react";
+import { Slider } from "@material-tailwind/react";
 
 const AllProducts = () => {
   const axios = useAxiosPublic();
@@ -24,6 +25,10 @@ const AllProducts = () => {
     setSortField(myArr[0])
     setSortValue(myArr[1])
   }
+
+  const allPrice = product.map(p=>p.price)
+  const maxPrice = allPrice.reduce((a,b)=>Math.max(a,b),0)
+  console.log(maxPrice);
 
   return (
     <div className="container mx-auto px-4">
@@ -73,11 +78,6 @@ const AllProducts = () => {
               </li>
             </ul>
             <br />
-          </div>
-          <div className="mt-5 border-2 col-span-1 border-gray-600 py-6 px-5">
-            <h1 className="text-lg font-semibold border-b-2 border-black pb-1">
-              Filter Price
-            </h1>
           </div>
         </div>
         <div className="flex-1">

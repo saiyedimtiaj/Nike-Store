@@ -4,6 +4,7 @@ import Home from "../Pages/Home/Home";
 import Details from "../Pages/Details/Details";
 import Cart from "../Pages/Cart/Cart";
 import AllProducts from "../Pages/AllProducts/AllProducts";
+import Signin from "../Pages/Signin/Signin";
 
 
 const Routes = createBrowserRouter([
@@ -29,6 +30,10 @@ const Routes = createBrowserRouter([
         }
       ]
     },
+    {
+      path:'/signin',
+      element:<Signin/>
+    }
   ]);
 
 export default Routes;

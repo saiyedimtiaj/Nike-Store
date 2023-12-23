@@ -74,7 +74,6 @@ async function run() {
       if(sortField && sortBy){
         sortObj[sortField] = sortBy
       }
-      console.log(sortObj);
       const result = await allProductsColluction.find(catObj).sort(sortObj).project(projection).toArray()
       res.send(result)
     })
