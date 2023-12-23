@@ -112,7 +112,7 @@ export function Nabvar() {
             </svg>
           )}
         </IconButton>
-        <Link to='/signin' className="lg:hidden ml-1">
+        <Link to='/signi' className="lg:hidden ml-1">
           <Button
             variant="gradient"
             size="sm"
