@@ -3,20 +3,22 @@ import ProductCard from "../../Components/AllProduct/ProductCard/ProductCard";
 import { useQuery } from "@tanstack/react-query";
 import useAxiosPublic from "../../hooks/UseAxiosPublic";
 import { useState } from "react";
-import { Slider } from "@material-tailwind/react";
 
 const AllProducts = () => {
   const axios = useAxiosPublic();
-  const [category, setCategory] = useState("");
   const [sortField,setSortField] = useState('');
   const [sortValue,setSortValue] = useState('');
+  const [allproduct,setAllproduct] = useState([])
 
 
-  const { data: product = [] } = useQuery({
-    queryKey: ["product-page", category,sortField,sortValue],
+  const { data: product = [],refetch } = useQuery({
+    queryKey: ["product-page",sortField,sortValue],
     queryFn: () =>
-      axios.get(`/allproduct?category=${category}&sortBy=${sortValue}&sortField=${sortField}`)
-      .then((res) => res.data),
+      axios.get(`/allproduct?sortBy=${sortValue}&sortField=${sortField}`)
+      .then((res) =>{
+        setAllproduct(res.data)
+        return res.data
+      }),
   });
 
   const handleSelect = e => {
@@ -26,9 +28,16 @@ const AllProducts = () => {
     setSortValue(myArr[1])
   }
 
-  const allPrice = product.map(p=>p.price)
-  const maxPrice = allPrice.reduce((a,b)=>Math.max(a,b),0)
-  console.log(maxPrice);
+  const handleCategory = (category) => {
+    const filterProduct = product.filter((product)=>product?.category===category)
+    console.log(filterProduct);
+    setAllproduct(filterProduct)
+  }
+
+  const manShoes = product.filter(prod=>prod.category === "Men's Shoes")
+  const womanShoes = product.filter(prod=>prod.category === "Women's Shoes")
+  const runningShoes = product.filter(prod=>prod.category === "Running Shoes")
+  const footballShoes = product.filter(prod=>prod.category === "Football Cleats")
 
   return (
     <div className="container mx-auto px-4">
@@ -47,34 +56,39 @@ const AllProducts = () => {
             </h1>
             <ul>
               <li
-                onClick={() => setCategory("")}
-                className="cursor-pointer my-3"
+                onClick={() => setAllproduct(product)}
+                className="cursor-pointer flex justify-between items-center my-3"
               >
-                All
+                <span> All</span>
+                <span>({product.length})</span>
               </li>
               <li
-                onClick={() => setCategory("Men's Shoes")}
-                className="cursor-pointer my-3"
+                onClick={() => handleCategory("Men's Shoes")}
+                className="cursor-pointer my-3 flex justify-between items-center"
               >
-                Men's Shoes
+                <span>Men's Shoes</span>
+                <span>({manShoes.length})</span>
               </li>
               <li
-                onClick={() => setCategory("Women's Shoes")}
-                className="cursor-pointer my-3"
+                onClick={() => handleCategory("Women's Shoes")}
+                className="cursor-pointer my-3 flex justify-between items-center"
               >
                 Women's Shoes
+                <span>({womanShoes.length})</span>
               </li>
               <li
-                onClick={() => setCategory("Running Shoes")}
-                className="cursor-pointer my-3"
+                onClick={() => handleCategory("Running Shoes")}
+                className="cursor-pointer my-3 flex justify-between items-center"
               >
                 Running Shoes
+                <span>({runningShoes.length})</span>
               </li>
               <li
-                onClick={() => setCategory("Football Cleats")}
-                className="cursor-pointer my-3"
+                onClick={() => handleCategory("Football Cleats")}
+                className="cursor-pointer my-3 flex justify-between items-center"
               >
                 Football Cleats
+                <span>({footballShoes.length})</span>
               </li>
             </ul>
             <br />
@@ -94,7 +108,7 @@ const AllProducts = () => {
             </div>
           </div>
           <div className="grid grid-cols-2 lg:grid-cols-3 gap-5">
-            {product?.map((product) => (
+            {allproduct?.map((product) => (
               <ProductCard product={product} key={product?._id} />
             ))}
           </div>

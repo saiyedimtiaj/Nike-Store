@@ -63,18 +63,13 @@ async function run() {
         price:1,
         category:1
       };
-      const catObj = {}
       const sortObj = {}
-      const category = req.query.category;
-      if(req.query?.category){
-        catObj.category = category
-      }
       const sortField = req.query.sortField;
       const sortBy = req.query.sortBy;
       if(sortField && sortBy){
         sortObj[sortField] = sortBy
       }
-      const result = await allProductsColluction.find(catObj).sort(sortObj).project(projection).toArray()
+      const result = await allProductsColluction.find().sort(sortObj).project(projection).toArray()
       res.send(result)
     })
 
