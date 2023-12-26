@@ -12,10 +12,12 @@ import { MdShoppingCart } from "react-icons/md";
 import { FaSearch } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import Search from "../Search/Search";
+import useAuth from "../../hooks/useAuth";
 
 export function Nabvar() {
   const [openNav, setOpenNav] = useState(false);
-  const [showSearch,setShowSearch] = useState(false)
+  const [showSearch,setShowSearch] = useState(false);
+  const {user,logout} = useAuth()
 
  useEffect(() => {
     window.addEventListener(
@@ -23,6 +25,10 @@ export function Nabvar() {
       () => window.innerWidth >= 960 && setOpenNav(false)
     );
   }, []);
+
+  const handleLogout = () => {
+    logout()
+  }
 
   //Collapse
 
@@ -66,7 +72,14 @@ export function Nabvar() {
         <div className="flex items-center gap-x-3">
           <Link to='/cart'><MdShoppingCart className="text-2xl cursor-pointer" /></Link>
           <button onClick={()=>setShowSearch(true)} className="cursor-pointer"><FaSearch className="text-xl" /></button>
-          <Link to='/signin' className="hidden lg:inline-block">
+          {
+            user ? <Button
+              onClick={handleLogout}
+              variant="gradient"
+              size="sm"
+            >
+              <span>Sign Out</span>
+            </Button>: <Link to='/signin' className="hidden lg:inline-block">
           <Button
             variant="gradient"
             size="sm"
@@ -74,6 +87,7 @@ export function Nabvar() {
             <span>Sign in</span>
           </Button>
           </Link>
+          }
         </div>
         <IconButton
           variant="text"
