@@ -5,8 +5,10 @@ import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a lo
 import { Carousel } from "react-responsive-carousel";
 import "./style.css";
 import { useState } from "react";
+import useAuth from "../../hooks/useAuth";
 
 const Details = () => {
+  const {user} = useAuth()
   const axios = useAxiosPublic();
   const { id } = useParams();
   const [selectedSize, setSelectedSize] = useState(null);
@@ -43,7 +45,9 @@ const Details = () => {
       name: product?.name,
       price: product?.price,
       image: product.images[0],
-      size: selectedSize
+      size: selectedSize,
+      email:user.email,
+      quantity:1,
     }
     if(selectedSize === null){
       setMessage('Size selection is require')
@@ -58,8 +62,8 @@ const Details = () => {
   }
 
   return (
-    <div className="max-w-6xl px-5 mt-10 flex gap-12 mb-16 mx-auto">
-      <div className="flex-1 sticky top-[50px]">
+    <div className="max-w-6xl px-5 mt-10 flex flex-col md:flex-row gap-12 mb-16 mx-auto">
+      <div className="flex-1 top-[50px]">
         <Carousel
           className="productCarousel"
           showIndicators={false}

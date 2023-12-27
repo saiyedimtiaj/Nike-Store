@@ -72,14 +72,15 @@ export function Nabvar() {
         <div className="flex items-center gap-x-3">
           <Link to='/cart'><MdShoppingCart className="text-2xl cursor-pointer" /></Link>
           <button onClick={()=>setShowSearch(true)} className="cursor-pointer"><FaSearch className="text-xl" /></button>
-          {
+         <div  className="hidden lg:inline-block">
+         {
             user ? <Button
               onClick={handleLogout}
               variant="gradient"
               size="sm"
             >
               <span>Sign Out</span>
-            </Button>: <Link to='/signin' className="hidden lg:inline-block">
+            </Button>: <Link to='/signin'>
           <Button
             variant="gradient"
             size="sm"
@@ -88,6 +89,7 @@ export function Nabvar() {
           </Button>
           </Link>
           }
+         </div>
         </div>
         <IconButton
           variant="text"
@@ -126,7 +128,15 @@ export function Nabvar() {
             </svg>
           )}
         </IconButton>
-        <Link to='/signi' className="lg:hidden ml-1">
+        <div  className="ml-1 lg:hidden">
+         {
+            user ? <Button
+              onClick={handleLogout}
+              variant="gradient"
+              size="sm"
+            >
+              <span>Sign Out</span>
+            </Button>: <Link to='/signin'>
           <Button
             variant="gradient"
             size="sm"
@@ -134,6 +144,8 @@ export function Nabvar() {
             <span>Sign in</span>
           </Button>
           </Link>
+          }
+         </div>
       </div>
       <Collapse open={openNav}>
         <div className="container mx-auto">{navList}</div>
