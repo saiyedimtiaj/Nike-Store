@@ -1,4 +1,3 @@
-
 import logo from "../../assets/logo.png";
 import {
   Navbar,
@@ -16,10 +15,10 @@ import useAuth from "../../hooks/useAuth";
 
 export function Nabvar() {
   const [openNav, setOpenNav] = useState(false);
-  const [showSearch,setShowSearch] = useState(false);
-  const {user,logout} = useAuth()
+  const [showSearch, setShowSearch] = useState(false);
+  const { user, logout } = useAuth();
 
- useEffect(() => {
+  useEffect(() => {
     window.addEventListener(
       "resize",
       () => window.innerWidth >= 960 && setOpenNav(false)
@@ -27,8 +26,8 @@ export function Nabvar() {
   }, []);
 
   const handleLogout = () => {
-    logout()
-  }
+    logout();
+  };
 
   //Collapse
 
@@ -62,96 +61,102 @@ export function Nabvar() {
   );
 
   return (
-   <>
-     <Navbar className="mx-auto max-w-screen-xl px-4 py-2 shadow-none rounded-none lg:px-8 lg:py-4">
-      <div className="container mx-auto flex items-center justify-between text-blue-gray-900">
-        <Typography className="mr-4 cursor-pointer py-1.5 font-medium">
-          <img src={logo} className="h-3 md:h-5 lg:h-6" alt="" />
-        </Typography>
-        <div className="hidden lg:block">{navList}</div>
-        <div className="flex items-center gap-x-3">
-          <Link to='/cart'><MdShoppingCart className="text-2xl cursor-pointer" /></Link>
-          <button onClick={()=>setShowSearch(true)} className="cursor-pointer"><FaSearch className="text-xl" /></button>
-         <div  className="hidden lg:inline-block">
-         {
-            user ? <Button
-              onClick={handleLogout}
-              variant="gradient"
-              size="sm"
-            >
-              <span>Sign Out</span>
-            </Button>: <Link to='/signin'>
-          <Button
-            variant="gradient"
-            size="sm"
+    <>
+      <Navbar className="mx-auto max-w-screen-xl px-4 py-2 shadow-none rounded-none lg:px-8 lg:py-4">
+        <div className="container mx-auto flex items-center justify-between text-blue-gray-900">
+          <Typography className="mr-4 cursor-pointer py-1.5 font-medium">
+            <img src={logo} className="h-3 md:h-5 lg:h-6" alt="" />
+          </Typography>
+          <div className="hidden lg:block">{navList}</div>
+          <div className="flex items-center gap-x-3">
+            <div className="hidden lg:flex items-center gap-2">
+              <Link to="/cart">
+                <MdShoppingCart className="text-2xl cursor-pointer" />
+              </Link>
+              <button
+                onClick={() => setShowSearch(true)}
+                className="cursor-pointer"
+              >
+                <FaSearch className="text-xl" />
+              </button>
+              {user ? (
+                <Button onClick={handleLogout} variant="gradient" size="sm">
+                  <span>Sign Out</span>
+                </Button>
+              ) : (
+                <Link to="/signin">
+                  <Button variant="gradient" size="sm">
+                    <span>Sign in</span>
+                  </Button>
+                </Link>
+              )}
+            </div>
+          </div>
+          <IconButton
+            variant="text"
+            className="ml-auto h-6 w-6 text-inherit hover:bg-transparent focus:bg-transparent active:bg-transparent lg:hidden"
+            ripple={false}
+            onClick={() => setOpenNav(!openNav)}
           >
-            <span>Sign in</span>
-          </Button>
-          </Link>
-          }
-         </div>
+            {openNav ? (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                className="h-6 w-6"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            ) : (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              </svg>
+            )}
+          </IconButton>
+          <div className="flex items-center gap-2 lg:hidden">
+            <Link to="/cart">
+              <MdShoppingCart className="text-2xl cursor-pointer" />
+            </Link>
+            <button
+              onClick={() => setShowSearch(true)}
+              className="cursor-pointer"
+            >
+              <FaSearch className="text-xl" />
+            </button>
+            {user ? (
+              <Button onClick={handleLogout} variant="gradient" size="sm">
+                <span>Sign Out</span>
+              </Button>
+            ) : (
+              <Link to="/signin">
+                <Button variant="gradient" size="sm">
+                  <span>Sign in</span>
+                </Button>
+              </Link>
+            )}
+          </div>
         </div>
-        <IconButton
-          variant="text"
-          className="ml-auto h-6 w-6 text-inherit hover:bg-transparent focus:bg-transparent active:bg-transparent lg:hidden"
-          ripple={false}
-          onClick={() => setOpenNav(!openNav)}
-        >
-          {openNav ? (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              className="h-6 w-6"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          ) : (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M4 6h16M4 12h16M4 18h16"
-              />
-            </svg>
-          )}
-        </IconButton>
-        <div  className="ml-1 lg:hidden">
-         {
-            user ? <Button
-              onClick={handleLogout}
-              variant="gradient"
-              size="sm"
-            >
-              <span>Sign Out</span>
-            </Button>: <Link to='/signin'>
-          <Button
-            variant="gradient"
-            size="sm"
-          >
-            <span>Sign in</span>
-          </Button>
-          </Link>
-          }
-         </div>
-      </div>
-      <Collapse open={openNav}>
-        <div className="container mx-auto">{navList}</div>
-      </Collapse>
-    </Navbar>
-      {showSearch && <Search setShowSearch={setShowSearch}/>}
-   </>
+        <Collapse open={openNav}>
+          <div className="container mx-auto">{navList}</div>
+        </Collapse>
+      </Navbar>
+      {showSearch && <Search setShowSearch={setShowSearch} />}
+    </>
   );
 }

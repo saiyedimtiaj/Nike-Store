@@ -28,6 +28,7 @@ async function run() {
     // await client.connect();
 
     const allProductsColluction = client.db("nike").collection("allproduct")
+    const cartColluction = client.db("nike").collection("cart")
 
 
     app.get('/products',async(req,res)=>{
@@ -70,6 +71,39 @@ async function run() {
         sortObj[sortField] = sortBy
       }
       const result = await allProductsColluction.find().sort(sortObj).project(projection).toArray()
+      res.send(result)
+    })
+
+    app.post('/carts',async(req,res)=>{
+      const body = req.body
+      const result = await cartColluction.insertOne(body)
+      res.send(result)
+    })
+
+    app.get('/carts',async(req,res)=>{
+      const email = req.query?.email;
+      const query = {email : email}
+      const result = await cartColluction.find(query).toArray()
+      res.send(result)
+    })
+
+    app.put('/carts/:id',async(req,res)=>{
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)}
+      const options = { upsert: true };
+      const updateDoc = {
+        $set: {
+          quantity: req.body.quantity
+        },
+      };
+      const result = await cartColluction.updateOne(query,updateDoc,options)
+      res.send(result)
+    })
+
+    app.delete('/carts/:id',async(req,res)=>{
+      const id = req.params.id;
+      const query ={_id:new ObjectId(id)}
+      const result = await cartColluction.deleteOne(query)
       res.send(result)
     })
 

@@ -48,12 +48,19 @@ const Details = () => {
       size: selectedSize,
       email:user.email,
       quantity:1,
+      category:product.category
     }
     if(selectedSize === null){
       setMessage('Size selection is require')
     }
     else{
-      console.log(cartItem);
+      axios.post('/carts',cartItem)
+      .then(res=>{
+        console.log(res.data);
+      })
+      .catch(err=>{
+        console.log(err.message);
+      })
     }
   }
 

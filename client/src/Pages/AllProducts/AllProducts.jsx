@@ -39,6 +39,7 @@ const AllProducts = () => {
   const runningShoes = product.filter(prod=>prod.category === "Running Shoes")
   const footballShoes = product.filter(prod=>prod.category === "Football Cleats")
 
+
   return (
     <div className="container mx-auto px-4">
       <div className="flex gap-3 mt-3 mb-5 items-center">
@@ -49,7 +50,6 @@ const AllProducts = () => {
         <span className="text-red-700">Shop</span>
       </div>
       <div className="flex flex-col md:flex-row gap-8 items-start">
-        <div>
           <div className="border-2 col-span-1 border-gray-600 py-6 px-5">
             <h1 className="text-lg font-semibold border-b-2 border-black pb-1">
               PRODUCT CATEGORIES
@@ -93,7 +93,6 @@ const AllProducts = () => {
             </ul>
             <br />
           </div>
-        </div>
         <div className="flex-1">
           <div className="border-2 flex justify-between mb-5 py-4 px-3 items-center border-gray-600">
             <p>Showing 1-10 of 40</p>
