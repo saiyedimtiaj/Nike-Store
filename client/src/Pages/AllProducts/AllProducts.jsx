@@ -2,43 +2,76 @@ import { Link } from "react-router-dom";
 import ProductCard from "../../Components/AllProduct/ProductCard/ProductCard";
 import { useQuery } from "@tanstack/react-query";
 import useAxiosPublic from "../../hooks/UseAxiosPublic";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const AllProducts = () => {
   const axios = useAxiosPublic();
-  const [sortField,setSortField] = useState('');
-  const [sortValue,setSortValue] = useState('');
-  const [allproduct,setAllproduct] = useState([])
+  const [sortField, setSortField] = useState("");
+  const [sortValue, setSortValue] = useState("");
+  const [allproduct, setAllproduct] = useState([]);
+  const [pageCount, setPageCount] = useState(0);
+  const [currentPage, setCurrentPage] = useState(0);
 
-
-  const { data: product = [],refetch } = useQuery({
-    queryKey: ["product-page",sortField,sortValue],
+  const { data: product = [], refetch } = useQuery({
+    queryKey: ["product-page", sortField, sortValue, currentPage],
     queryFn: () =>
-      axios.get(`/allproduct?sortBy=${sortValue}&sortField=${sortField}`)
-      .then((res) =>{
-        setAllproduct(res.data)
-        return res.data
-      }),
+      axios
+        .get(
+          `/allproduct?sortBy=${sortValue}&sortField=${sortField}&currentPage=${currentPage}`
+        )
+        .then((res) => {
+          setAllproduct(res.data);
+          return res.data;
+        }),
   });
 
-  const handleSelect = e => {
-    const option = e.target.value
-    const myArr = option.split(",")
-    setSortField(myArr[0])
-    setSortValue(myArr[1])
+  useEffect(() => {
+    axios.get("productcount").then((res) => setPageCount(res.data.count));
+  }, []);
+
+  const pageSize = Math.ceil(pageCount / 6);
+  const pages = [];
+  for (let i = 1; i < pageSize; i++) {
+    pages.push(i);
   }
+
+  const handleSelect = (e) => {
+    const option = e.target.value;
+    const myArr = option.split(",");
+    setSortField(myArr[0]);
+    setSortValue(myArr[1]);
+  };
 
   const handleCategory = (category) => {
-    const filterProduct = product.filter((product)=>product?.category===category)
+    const filterProduct = product.filter(
+      (product) => product?.category === category
+    );
     console.log(filterProduct);
-    setAllproduct(filterProduct)
-  }
+    setAllproduct(filterProduct);
+  };
 
-  const manShoes = product.filter(prod=>prod.category === "Men's Shoes")
-  const womanShoes = product.filter(prod=>prod.category === "Women's Shoes")
-  const runningShoes = product.filter(prod=>prod.category === "Running Shoes")
-  const footballShoes = product.filter(prod=>prod.category === "Football Cleats")
+  const handleNext = () => {
+    if (currentPage < pages.length) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
 
+  const handlePrev = () => {
+    if (currentPage !== 0) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const manShoes = product.filter((prod) => prod.category === "Men's Shoes");
+  const womanShoes = product.filter(
+    (prod) => prod.category === "Women's Shoes"
+  );
+  const runningShoes = product.filter(
+    (prod) => prod.category === "Running Shoes"
+  );
+  const footballShoes = product.filter(
+    (prod) => prod.category === "Football Cleats"
+  );
 
   return (
     <div className="container mx-auto px-4">
@@ -50,55 +83,61 @@ const AllProducts = () => {
         <span className="text-red-700">Shop</span>
       </div>
       <div className="flex flex-col md:flex-row gap-8 items-start">
-          <div className="border-2 col-span-1 border-gray-600 py-6 px-5">
-            <h1 className="text-lg font-semibold border-b-2 border-black pb-1">
-              PRODUCT CATEGORIES
-            </h1>
-            <ul>
-              <li
-                onClick={() => setAllproduct(product)}
-                className="cursor-pointer flex justify-between items-center my-3"
-              >
-                <span> All</span>
-                <span>({product.length})</span>
-              </li>
-              <li
-                onClick={() => handleCategory("Men's Shoes")}
-                className="cursor-pointer my-3 flex justify-between items-center"
-              >
-                <span>Men's Shoes</span>
-                <span>({manShoes.length})</span>
-              </li>
-              <li
-                onClick={() => handleCategory("Women's Shoes")}
-                className="cursor-pointer my-3 flex justify-between items-center"
-              >
-                Women's Shoes
-                <span>({womanShoes.length})</span>
-              </li>
-              <li
-                onClick={() => handleCategory("Running Shoes")}
-                className="cursor-pointer my-3 flex justify-between items-center"
-              >
-                Running Shoes
-                <span>({runningShoes.length})</span>
-              </li>
-              <li
-                onClick={() => handleCategory("Football Cleats")}
-                className="cursor-pointer my-3 flex justify-between items-center"
-              >
-                Football Cleats
-                <span>({footballShoes.length})</span>
-              </li>
-            </ul>
-            <br />
-          </div>
+        <div className="border-2 col-span-1 border-gray-600 py-6 px-5">
+          <h1 className="text-lg font-semibold border-b-2 border-black pb-1">
+            PRODUCT CATEGORIES
+          </h1>
+          <ul>
+            <li
+              onClick={() => setAllproduct(product)}
+              className="cursor-pointer flex justify-between items-center my-3"
+            >
+              <span> All</span>
+              <span>({product.length})</span>
+            </li>
+            <li
+              onClick={() => handleCategory("Men's Shoes")}
+              className="cursor-pointer my-3 flex justify-between items-center"
+            >
+              <span>Men's Shoes</span>
+              <span>({manShoes.length})</span>
+            </li>
+            <li
+              onClick={() => handleCategory("Women's Shoes")}
+              className="cursor-pointer my-3 flex justify-between items-center"
+            >
+              Women's Shoes
+              <span>({womanShoes.length})</span>
+            </li>
+            <li
+              onClick={() => handleCategory("Running Shoes")}
+              className="cursor-pointer my-3 flex justify-between items-center"
+            >
+              Running Shoes
+              <span>({runningShoes.length})</span>
+            </li>
+            <li
+              onClick={() => handleCategory("Football Cleats")}
+              className="cursor-pointer my-3 flex justify-between items-center"
+            >
+              Football Cleats
+              <span>({footballShoes.length})</span>
+            </li>
+          </ul>
+          <br />
+        </div>
         <div className="flex-1">
           <div className="border-2 flex justify-between mb-5 py-4 px-3 items-center border-gray-600">
             <p>Showing 1-10 of 40</p>
             <div className="border-2 border-black">
-              <select className="px-2 py-1" defaultValue='sortby' onChange={handleSelect}>
-                <option disabled value="sortby">Sort By</option>
+              <select
+                className="px-2 py-1"
+                defaultValue="sortby"
+                onChange={handleSelect}
+              >
+                <option disabled value="sortby">
+                  Sort By
+                </option>
                 <option value="name,asc">Name : A - Z</option>
                 <option value="name,desc">Name : Z - A</option>
                 <option value="price,asc">Price : Low to High</option>
@@ -110,6 +149,66 @@ const AllProducts = () => {
             {allproduct?.map((product) => (
               <ProductCard product={product} key={product?._id} />
             ))}
+          </div>
+          <div className="my-5 flex justify-end gap-2">
+            {pages.map((page) => (
+              <button onClick={() => setCurrentPage(page)} key={page}>
+                {page}
+              </button>
+            ))}
+          </div>
+          <div className="flex gap-4 items-center justify-end mb-4">
+            <button
+              class="relative h-8 max-h-[32px] w-8 max-w-[32px] select-none rounded-lg border border-gray-900 text-center align-middle font-sans text-xs font-medium uppercase text-gray-900 transition-all hover:opacity-75 focus:ring focus:ring-gray-300 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+              type="button"
+              onClick={handlePrev}
+              disabled={currentPage === 0}
+            >
+              <span class="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="2"
+                  stroke="currentColor"
+                  aria-hidden="true"
+                  class="w-4 h-4"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
+                  ></path>
+                </svg>
+              </span>
+            </button>
+            <p>
+              Page <strong>{currentPage + 1}</strong> of <strong>{pageSize}</strong>
+            </p>
+            <button
+              class="relative h-8 max-h-[32px] w-8 max-w-[32px] select-none rounded-lg border border-gray-900 text-center align-middle font-sans text-xs font-medium uppercase text-gray-900 transition-all hover:opacity-75 focus:ring focus:ring-gray-300 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+              type="button"
+              onClick={handleNext}
+              disabled={currentPage === pages.length}
+            >
+              <span class="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="2"
+                  stroke="currentColor"
+                  aria-hidden="true"
+                  class="w-4 h-4"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
+                  ></path>
+                </svg>
+              </span>
+            </button>
           </div>
         </div>
       </div>
