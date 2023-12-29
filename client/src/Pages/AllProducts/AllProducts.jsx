@@ -8,19 +8,18 @@ const AllProducts = () => {
   const axios = useAxiosPublic();
   const [sortField, setSortField] = useState("");
   const [sortValue, setSortValue] = useState("");
-  const [allproduct, setAllproduct] = useState([]);
   const [pageCount, setPageCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
+  const [category,setCategory] = useState('all')
 
-  const { data: product = [], refetch } = useQuery({
-    queryKey: ["product-page", sortField, sortValue, currentPage],
+  const { data: products = [], refetch } = useQuery({
+    queryKey: ["product-page", sortField, sortValue, currentPage,category],
     queryFn: () =>
       axios
         .get(
-          `/allproduct?sortBy=${sortValue}&sortField=${sortField}&currentPage=${currentPage}`
+          `/allproduct?sortBy=${sortValue}&sortField=${sortField}&currentPage=${currentPage}&category=${category}`
         )
         .then((res) => {
-          setAllproduct(res.data);
           return res.data;
         }),
   });
@@ -42,12 +41,8 @@ const AllProducts = () => {
     setSortValue(myArr[1]);
   };
 
-  const handleCategory = (category) => {
-    const filterProduct = product.filter(
-      (product) => product?.category === category
-    );
-    console.log(filterProduct);
-    setAllproduct(filterProduct);
+  const handleCategory = (cate) => {
+    setCategory(cate)
   };
 
   const handleNext = () => {
@@ -62,16 +57,6 @@ const AllProducts = () => {
     }
   };
 
-  const manShoes = product.filter((prod) => prod.category === "Men's Shoes");
-  const womanShoes = product.filter(
-    (prod) => prod.category === "Women's Shoes"
-  );
-  const runningShoes = product.filter(
-    (prod) => prod.category === "Running Shoes"
-  );
-  const footballShoes = product.filter(
-    (prod) => prod.category === "Football Cleats"
-  );
 
   return (
     <div className="container mx-auto px-4">
@@ -89,39 +74,34 @@ const AllProducts = () => {
           </h1>
           <ul>
             <li
-              onClick={() => setAllproduct(product)}
               className="cursor-pointer flex justify-between items-center my-3"
+              onClick={()=>handleCategory('all')}
             >
               <span> All</span>
-              <span>({product.length})</span>
             </li>
             <li
-              onClick={() => handleCategory("Men's Shoes")}
               className="cursor-pointer my-3 flex justify-between items-center"
+              onClick={()=>handleCategory("Men's Shoes")}
             >
               <span>Men's Shoes</span>
-              <span>({manShoes.length})</span>
             </li>
             <li
-              onClick={() => handleCategory("Women's Shoes")}
               className="cursor-pointer my-3 flex justify-between items-center"
+              onClick={()=>handleCategory("Women's Shoes")}
             >
               Women's Shoes
-              <span>({womanShoes.length})</span>
             </li>
             <li
-              onClick={() => handleCategory("Running Shoes")}
               className="cursor-pointer my-3 flex justify-between items-center"
+              onClick={()=>handleCategory('Running Shoes')}
             >
               Running Shoes
-              <span>({runningShoes.length})</span>
             </li>
             <li
-              onClick={() => handleCategory("Football Cleats")}
               className="cursor-pointer my-3 flex justify-between items-center"
+              onClick={()=>handleCategory('Football Cleats')}
             >
               Football Cleats
-              <span>({footballShoes.length})</span>
             </li>
           </ul>
           <br />
@@ -146,37 +126,30 @@ const AllProducts = () => {
             </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {allproduct?.map((product) => (
+            {products?.map((product) => (
               <ProductCard product={product} key={product?._id} />
             ))}
           </div>
-          <div className="my-5 flex justify-end gap-2">
-            {pages.map((page) => (
-              <button onClick={() => setCurrentPage(page)} key={page}>
-                {page}
-              </button>
-            ))}
-          </div>
-          <div className="flex gap-4 items-center justify-end mb-4">
+          <div className="flex gap-4 items-center justify-end mt-6">
             <button
-              class="relative h-8 max-h-[32px] w-8 max-w-[32px] select-none rounded-lg border border-gray-900 text-center align-middle font-sans text-xs font-medium uppercase text-gray-900 transition-all hover:opacity-75 focus:ring focus:ring-gray-300 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+              className="relative h-8 max-h-[32px] w-8 max-w-[32px] select-none rounded-lg border border-gray-900 text-center align-middle font-sans text-xs font-medium uppercase text-gray-900 transition-all hover:opacity-75 focus:ring focus:ring-gray-300 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
               type="button"
               onClick={handlePrev}
               disabled={currentPage === 0}
             >
-              <span class="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
+              <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
-                  stroke-width="2"
+                  strokeWidth="2"
                   stroke="currentColor"
                   aria-hidden="true"
-                  class="w-4 h-4"
+                  className="w-4 h-4"
                 >
                   <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                     d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
                   ></path>
                 </svg>
@@ -186,24 +159,24 @@ const AllProducts = () => {
               Page <strong>{currentPage + 1}</strong> of <strong>{pageSize}</strong>
             </p>
             <button
-              class="relative h-8 max-h-[32px] w-8 max-w-[32px] select-none rounded-lg border border-gray-900 text-center align-middle font-sans text-xs font-medium uppercase text-gray-900 transition-all hover:opacity-75 focus:ring focus:ring-gray-300 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+              className="relative h-8 max-h-[32px] w-8 max-w-[32px] select-none rounded-lg border border-gray-900 text-center align-middle font-sans text-xs font-medium uppercase text-gray-900 transition-all hover:opacity-75 focus:ring focus:ring-gray-300 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
               type="button"
               onClick={handleNext}
               disabled={currentPage === pages.length}
             >
-              <span class="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
+              <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
-                  stroke-width="2"
+                  strokeWidth="2"
                   stroke="currentColor"
                   aria-hidden="true"
-                  class="w-4 h-4"
+                  className="w-4 h-4"
                 >
                   <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                     d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
                   ></path>
                 </svg>

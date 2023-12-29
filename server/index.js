@@ -73,6 +73,13 @@ async function run() {
         category: 1,
       };
       const currentPage = parseInt(req.query.currentPage);
+      let category = {}
+      if(req.query?.category === 'all'){
+        category = {}
+      }
+      else{
+        category.category = req.query?.category
+      }
       const sortObj = {};
       const sortField = req.query.sortField;
       const sortBy = req.query.sortBy;
@@ -80,11 +87,11 @@ async function run() {
         sortObj[sortField] = sortBy;
       }
       const result = await allProductsColluction
-        .find()
+        .find(category)
         .sort(sortObj)
         .project(projection)
-        // .skip(currentPage * 6)
-        // .limit(6)
+        .skip(currentPage * 6)
+        .limit(6)
         .toArray();
       res.send(result);
     });
