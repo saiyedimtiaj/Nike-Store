@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -128,6 +129,27 @@ async function run() {
       const result = await cartColluction.deleteOne(query);
       res.send(result);
     });
+
+    app.post('/create-checkout-session',async(req,res)=>{
+      const product = req.body;
+      const session = await stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        line_items:product.map(product=>({
+          price_data:{
+            currency: "inr",
+            product_data:{
+              name:product.name,
+            },
+            unit_amount:product.price * 100
+          },
+          quantity:product.quantity
+        })),
+        mode:"payment",
+        success_url:'http://localhost:5173/sucess',
+        cancel_url:'http://localhost:5173/cancel'
+      })
+      res.json({id:session.id})
+    })
 
     // {"price":{$gte: 120, $lte: 150}}
 

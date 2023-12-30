@@ -6,6 +6,8 @@ import Cart from "../Pages/Cart/Cart";
 import AllProducts from "../Pages/AllProducts/AllProducts";
 import Signin from "../Pages/Signin/Signin";
 import Signup from "../Pages/Signup/Signup";
+import Sucess from "../Pages/Stripe/Sucess";
+import Cancel from "../Pages/Stripe/Cancel";
 
 
 const Routes = createBrowserRouter([
@@ -28,6 +30,14 @@ const Routes = createBrowserRouter([
         {
           path:'/cart',
           element:<Cart/>
+        },
+        {
+          path:'/sucess',
+          element:<Sucess/>,
+        },
+        {
+          path:'/cancel',
+          element:<Cancel/>
         }
       ]
     },

@@ -3,6 +3,8 @@ import CartItems from "../../Components/CartItems/CartItems";
 import useAxiosPublic from "../../hooks/UseAxiosPublic";
 import useAuth from "../../hooks/useAuth";
 import cartImg from "../../assets/empty-cart.jpg";
+import {loadStripe} from '@stripe/stripe-js';
+
 const Cart = () => {
   const axios = useAxiosPublic();
   const { user } = useAuth();
@@ -32,7 +34,20 @@ const Cart = () => {
     })
   }
 
+  const handleChackout = async() => {
+    const stripe = await loadStripe(import.meta.env.VITE_Stripe_Publishable_Key)
+    
+    const responce = await axios.post('/create-checkout-session',cartItems)
+    const session = await responce.data
 
+    const result = stripe.redirectToCheckout({
+      sessionId : session.id
+    })
+
+    if(result.error){
+      console.log(result.error);
+    }
+  }
 
   const subTottal = cartItems.reduce((a,b)=>a+(b.price * b.quantity),0)
   if(isPending){
@@ -83,7 +98,7 @@ const Cart = () => {
               </div>
 
               {/* BUTTON START */}
-              <button className="w-full py-4 rounded-full bg-black text-white text-lg font-medium transition-transform active:scale-95 mb-3 hover:opacity-75 flex items-center gap-2 justify-center">
+              <button onClick={handleChackout} className="w-full py-4 rounded-full bg-black text-white text-lg font-medium transition-transform active:scale-95 mb-3 hover:opacity-75 flex items-center gap-2 justify-center">
                 Checkout
               </button>
               {/* BUTTON END */}
