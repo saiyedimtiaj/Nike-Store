@@ -1,28 +1,51 @@
 import { FcGoogle } from "react-icons/fc";
 import { Link, useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
+import { toast } from "react-hot-toast";
 
 const Signin = () => {
-  const {signin} = useAuth();
-  const navigate = useNavigate()
+  const { signin, google } = useAuth();
+  const navigate = useNavigate();
 
-  const handleSignin = e => {
-    e.preventDefault()
+  const handleSignin = (e) => {
+    e.preventDefault();
     const form = e.target;
     const email = form.email.value;
     const password = form.password.value;
-    signin(email,password)
-    .then(()=>{
-      navigate('/')
-    })
-    .catch(err=>{
-      console.log(err.message);
-    })
-  }
+    signin(email, password)
+      .then(() => {
+        navigate("/");
+        toast.success("Sign In Your Account Sucessfully", {
+          style: {
+            background: "#333",
+            color: "#fff",
+          },
+        });
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  };
+
+  const handleGoogleLogin = () => {
+    google().then(() => {
+      navigate("/");
+      toast.success("Google Sign In Sucessfully", {
+        style: {
+          background: "#333",
+          color: "#fff",
+        },
+      });
+    });
+  };
+
   return (
     <div className="max-w-md mx-auto px-4">
       <h1 className="text-3xl mt-10 mb-10 font-semibold">Sign in to Nike</h1>
-      <button className="flex items-center justify-center border border-black rounded-full gap-3 w-full py-3 text-xl font-semibold">
+      <button
+        onClick={handleGoogleLogin}
+        className="flex items-center justify-center border border-black rounded-full gap-3 w-full py-3 text-xl font-semibold"
+      >
         <span className="text-2xl">
           <FcGoogle />
         </span>
@@ -52,7 +75,10 @@ const Signin = () => {
           name="password"
           className="px-3 py-3 rounded-xl mt-1 text-xl border-2 border-black w-full"
         />
-        <button type="submit" className="w-full font-semibold mt-3 text-lg bg-black py-3 text-white rounded-full">
+        <button
+          type="submit"
+          className="w-full font-semibold mt-3 text-lg bg-black py-3 text-white rounded-full"
+        >
           Sign In
         </button>
       </form>

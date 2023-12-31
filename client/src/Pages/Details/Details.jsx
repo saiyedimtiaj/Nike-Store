@@ -7,6 +7,7 @@ import "./style.css";
 import { useState } from "react";
 import useAuth from "../../hooks/useAuth";
 import RelatedProduct from "../../Components/RelatedProduct/RelatedProduct";
+import { toast } from "react-hot-toast";
 
 const Details = () => {
   const { user } = useAuth();
@@ -56,8 +57,13 @@ const Details = () => {
     } else {
       axios
         .post("/carts", cartItem)
-        .then((res) => {
-          console.log(res.data);
+        .then(() => {
+          toast.success("Product add in your cart sucessfully", {
+            style: {
+              background: "#333",
+              color: "#fff",
+            },
+          });
         })
         .catch((err) => {
           console.log(err.message);

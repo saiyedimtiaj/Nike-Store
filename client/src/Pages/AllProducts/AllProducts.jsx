@@ -43,6 +43,7 @@ const AllProducts = () => {
 
   const handleCategory = (cate) => {
     setCategory(cate)
+    setCurrentPage(0)
   };
 
   const handleNext = () => {
@@ -108,7 +109,7 @@ const AllProducts = () => {
         </div>
         <div className="flex-1">
           <div className="border-2 flex justify-between mb-5 py-4 px-3 items-center border-gray-600">
-            <p>Showing 1-10 of 40</p>
+            <p>Showing {currentPage === 0 ? 1 : currentPage * 6}-{(currentPage + 1)*6} of {pageCount}</p>
             <div className="border-2 border-black">
               <select
                 className="px-2 py-1"
@@ -162,7 +163,7 @@ const AllProducts = () => {
               className="relative h-8 max-h-[32px] w-8 max-w-[32px] select-none rounded-lg border border-gray-900 text-center align-middle font-sans text-xs font-medium uppercase text-gray-900 transition-all hover:opacity-75 focus:ring focus:ring-gray-300 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
               type="button"
               onClick={handleNext}
-              disabled={currentPage === pages.length}
+              disabled={products.length < 6}
             >
               <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
                 <svg

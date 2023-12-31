@@ -1,24 +1,27 @@
-import { useQuery } from "@tanstack/react-query";
 import CartItems from "../../Components/CartItems/CartItems";
 import useAxiosPublic from "../../hooks/UseAxiosPublic";
-import useAuth from "../../hooks/useAuth";
 import cartImg from "../../assets/empty-cart.jpg";
 import {loadStripe} from '@stripe/stripe-js';
+import { toast } from "react-hot-toast";
+import { Link } from "react-router-dom";
+import useCart from "../../hooks/useCart";
 
 const Cart = () => {
   const axios = useAxiosPublic();
-  const { user } = useAuth();
-  const { data: cartItems = [],refetch,isPending } = useQuery({
-    queryKey: ["cart-items", user],
-    queryFn: () =>
-      axios.get(`/carts?email=${user?.email}`).then((res) => res.data),
-  });
+  const [cartItems,refetch,isPending] = useCart()
 
   const handleDelete = (id) => {
     axios.delete(`/carts/${id}`)
     .then(res=>{
       refetch()
-      console.log(res.data);
+      if(res.data){
+        toast.success("Product remove sucessfully", {
+          style: {
+            background: "#333",
+            color: "#fff",
+          },
+        });
+      }
     })
     .catch(err=>{
       console.log(err.message);
@@ -47,6 +50,7 @@ const Cart = () => {
     if(result.error){
       console.log(result.error);
     }
+    console.log({id:session.id});
   }
 
   const subTottal = cartItems.reduce((a,b)=>a+(b.price * b.quantity),0)
@@ -64,9 +68,11 @@ const Cart = () => {
             Looks like you have not added anything in your cart go ahead and
             explore our product
           </p>
-          <button className="py-3 text-sm px-8 bg-black text-white rounded-full">
+         <Link to='/product'>
+         <button className="py-3 text-sm px-8 bg-black text-white rounded-full">
             Continue Shopping
           </button>
+         </Link>
         </div>
       ) : (
         <div>

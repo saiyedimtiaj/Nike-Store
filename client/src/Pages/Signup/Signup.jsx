@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
+import { toast } from "react-hot-toast";
 
 const Signup = () => {
   const {register} = useAuth();
@@ -13,6 +14,12 @@ const Signup = () => {
     register(email,password)
     .then(()=>{
       navigate('/')
+      toast.success("Create Your Account Sucessfully", {
+        style: {
+          background: "#333",
+          color: "#fff",
+        },
+      });
     })
     .catch(err=>{
       console.log(err.message);
