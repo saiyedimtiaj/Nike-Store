@@ -8,10 +8,12 @@ import { useState } from "react";
 import useAuth from "../../hooks/useAuth";
 import RelatedProduct from "../../Components/RelatedProduct/RelatedProduct";
 import { toast } from "react-hot-toast";
+import useCart from "../../hooks/useCart";
 
 const Details = () => {
   const { user } = useAuth();
   const axios = useAxiosPublic();
+  const [cartItems,refetch] = useCart()
   const { id } = useParams();
   const [selectedSize, setSelectedSize] = useState(null);
   const [message, setMessage] = useState("");
@@ -30,15 +32,18 @@ const Details = () => {
     "Uk 11.5",
   ];
 
+  
   const handleSizeClick = (size) => {
     setSelectedSize(size);
     setMessage(null);
   };
-
+  
   const { data: product = [], isPending } = useQuery({
     queryKey: ["single-product", id],
     queryFn: () => axios.get(`/products/${id}`).then((res) => res.data),
   });
+  
+  const isExist = cartItems.find(item=>item.name === product.name && item.email === user.email)
 
   const haveSize = product.sizes;
 
@@ -55,9 +60,11 @@ const Details = () => {
     if (selectedSize === null) {
       setMessage("Size selection is require");
     } else {
-      axios
+      if(!isExist){
+        axios
         .post("/carts", cartItem)
         .then(() => {
+          refetch()
           toast.success("Product add in your cart sucessfully", {
             style: {
               background: "#333",
@@ -68,6 +75,15 @@ const Details = () => {
         .catch((err) => {
           console.log(err.message);
         });
+      }
+      else{
+        toast.error("Product is already in cart", {
+          style: {
+            background: "#333",
+            color: "#fff",
+          },
+        });
+      }
     }
   };
 

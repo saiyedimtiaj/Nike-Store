@@ -35,6 +35,7 @@ export function Nabvar() {
     <ul className="mt-2 mb-4 flex flex-col gap-2 lg:mb-0 font-medium lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
       <NavLink
         to="/"
+        onClick={()=>setOpenNav(false)}
         className={({ isActive, isPending }) =>
           isPending
             ? ""
@@ -47,6 +48,7 @@ export function Nabvar() {
       </NavLink>
       <NavLink
         to="/product"
+        onClick={()=>setOpenNav(false)}
         className={({ isActive, isPending }) =>
           isPending
             ? ""

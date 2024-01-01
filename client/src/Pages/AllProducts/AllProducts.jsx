@@ -109,7 +109,7 @@ const AllProducts = () => {
         </div>
         <div className="flex-1">
           <div className="border-2 flex justify-between mb-5 py-4 px-3 items-center border-gray-600">
-            <p>Showing {currentPage === 0 ? 1 : currentPage * 6}-{(currentPage + 1)*6} of {pageCount}</p>
+            <p>Showing {currentPage === 0 ? 1 : (currentPage * 6)+ 1}-{(currentPage + 1)*6} of {pageCount}</p>
             <div className="border-2 border-black">
               <select
                 className="px-2 py-1"
