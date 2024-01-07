@@ -130,6 +130,24 @@ async function run() {
       res.send(result);
     });
 
+    app.post('/handle-payment-success', async (req, res) => {
+      const cartItems = req.body;
+    
+      // Save payment details to MongoDB
+      const payment = {
+        session_id: req.body.id,
+        // Add other fields as needed
+      };
+    
+      try {
+        await paymentsCollection.insertOne(payment);
+        res.json({ success: true, message: 'Payment details saved successfully' });
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Failed to save payment details' });
+      }
+    });
+
     app.post('/create-checkout-session',async(req,res)=>{
       const product = req.body;
       const session = await stripe.checkout.sessions.create({

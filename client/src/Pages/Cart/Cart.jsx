@@ -47,11 +47,13 @@ const Cart = () => {
       sessionId : session.id
     })
 
-    if(result.error){
-      console.log(result.error);
+    if (result.error) {
+      console.error(result.error);
     }
-    console.log({id:session.id});
+    console.log(responce.data);
   }
+
+  
 
   const subTottal = cartItems.reduce((a,b)=>a+(b.price * b.quantity),0)
   if(isPending){
@@ -93,7 +95,7 @@ const Cart = () => {
                     Subtotal
                   </div>
                   <div className="text-md md:text-lg font-medium text-black">
-                    ${subTottal}
+                    ${subTottal.toFixed(2)}
                   </div>
                 </div>
                 <div className="text-sm md:text-md pb-4 border-t mt-3">
