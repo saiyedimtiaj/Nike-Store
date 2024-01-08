@@ -8,6 +8,7 @@ import Signin from "../Pages/Signin/Signin";
 import Signup from "../Pages/Signup/Signup";
 import Sucess from "../Pages/Stripe/Sucess";
 import Cancel from "../Pages/Stripe/Cancel";
+import Dashboard from "../Layout/Dashboard";
 
 
 const Routes = createBrowserRouter([
@@ -48,6 +49,10 @@ const Routes = createBrowserRouter([
     {
       path:'/signup',
       element:<Signup/>
+    },
+    {
+      path:'/dashboard',
+      element:<Dashboard/>
     }
   ]);
 
