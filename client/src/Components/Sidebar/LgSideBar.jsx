@@ -1,53 +1,27 @@
-import React from "react";
-import { IconButton, Drawer, Card } from "@material-tailwind/react";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import { IoClose } from "react-icons/io5";
+import { Card, List } from "@material-tailwind/react";
 import profile from "../../assets/picture.jpg";
 import { NavLink } from "react-router-dom";
 import { BiSolidDashboard,BiLogOut } from "react-icons/bi";
 import { FaBox, FaHome, FaShoppingCart, FaUser } from "react-icons/fa";
 import { IoMdAdd } from "react-icons/io";
 
-export function Sidebar() {
-  const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
-
-  const openDrawer = () => setIsDrawerOpen(true);
-  const closeDrawer = () => setIsDrawerOpen(false);
-
+export function LgSidebar() {
   return (
-    <>
-      <IconButton variant="text" size="lg" onClick={openDrawer}>
-        {isDrawerOpen ? (
-          <XMarkIcon className="h-8 w-8 stroke-2" />
-        ) : (
-          <Bars3Icon className="h-8 w-8 stroke-2" />
-        )}
-      </IconButton>
-      <Drawer open={isDrawerOpen} onClose={closeDrawer}>
-        <Card
-          color="transparent"
-          shadow={false}
-          className="h-[calc(100vh-2rem)] w-full p-4"
-        >
-          <div className="flex justify-between px-4 items-center">
-            <img className="w-14" src="../../assets/logo.png" alt="" />
-            <button
-              onClick={() => setIsDrawerOpen(false)}
-              className="text-3xl text-black"
-            >
-              <IoClose />
-            </button>
-          </div>
-          <div className="flex mt-3 flex-col items-center">
-          <div
+    <Card className="h-screen w-full max-w-[20rem] p-4 bg-[#f7d9d9] rounded-none">
+      <div className="flex justify-between px-4 items-center">
+        <img className="w-14" src="../../assets/logo.png" alt="" />
+      </div>
+      <div className="flex mt-3 flex-col items-center">
+        <div
           className="w-24 h-24 rounded-full bg-cover"
           style={{ backgroundImage: `url(${profile})` }}
         />
-            <h1 className="text-xl font-semibold text-black uppercase mt-2">
-              Saiyed Imtiaj
-            </h1>
-          </div>
-          <NavLink
+        <h1 className="text-xl font-semibold text-black uppercase mt-2">
+          Saiyed Imtiaj
+        </h1>
+      </div>
+     <List>
+        <NavLink
           to="/dashboard"
           className={({ isActive, isPending }) =>
             isPending
@@ -159,8 +133,7 @@ export function Sidebar() {
         <span className="text-xl"><BiLogOut/></span>
           Logout
         </div>
-        </Card>
-      </Drawer>
-    </>
+      </List>
+    </Card>
   );
 }
