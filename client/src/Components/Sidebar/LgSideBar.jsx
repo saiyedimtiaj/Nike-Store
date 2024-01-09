@@ -27,8 +27,8 @@ export function LgSidebar() {
             isPending
               ? "pending"
               : isActive
-              ? "bg-gray-200 px-3 py-2 rounded-md mt-2 text-black font-medium"
-              : "mt-2 hover:bg-gray-200 px-3 py-2 rounded-md text-black font-medium"
+              ? "bg-gray-200 px-3 py-2 rounded-md mt-1 text-black font-medium"
+              : "mt-1 hover:bg-gray-200 px-3 py-2 rounded-md text-black font-medium"
           }
         >
           {" "}
@@ -40,7 +40,7 @@ export function LgSidebar() {
           </div>
         </NavLink>
         <NavLink
-          to="/all-product"
+          to="/dashboard/all-product"
           className={({ isActive, isPending }) =>
             isPending
               ? "pending"

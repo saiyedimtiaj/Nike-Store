@@ -9,6 +9,8 @@ import Signup from "../Pages/Signup/Signup";
 import Sucess from "../Pages/Stripe/Sucess";
 import Cancel from "../Pages/Stripe/Cancel";
 import Dashboard from "../Layout/Dashboard";
+import DashboardHome from "../Pages/DashboardHome/DashboardHome";
+import All_Product from "../Pages/Dashboard/All_Product/All_Product";
 
 
 const Routes = createBrowserRouter([
@@ -43,6 +45,20 @@ const Routes = createBrowserRouter([
       ]
     },
     {
+      path:'/dashboard',
+      element:<Dashboard/>,
+      children:[
+        {
+          path:'/dashboard',
+          element:<DashboardHome/>
+        },
+        {
+          path:'/dashboard/all-product',
+          element:<All_Product/>
+        }
+      ]
+    },
+    {
       path:'/signin',
       element:<Signin/>
     },
@@ -50,10 +66,6 @@ const Routes = createBrowserRouter([
       path:'/signup',
       element:<Signup/>
     },
-    {
-      path:'/dashboard',
-      element:<Dashboard/>
-    }
   ]);
 
 export default Routes;
