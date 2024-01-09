@@ -7,7 +7,8 @@ import { IoMdAdd } from "react-icons/io";
 
 export function LgSidebar() {
   return (
-    <Card className="h-screen w-full max-w-[20rem] p-4 bg-[#f7d9d9] rounded-none">
+    <Card className="min-h-screen flex flex-col justify-between max-w-[20rem] p-4 bg-[#f7d9d9] rounded-none">
+        <List>
       <div className="flex justify-between px-4 items-center">
         <img className="w-14" src="../../assets/logo.png" alt="" />
       </div>
@@ -20,7 +21,6 @@ export function LgSidebar() {
           Saiyed Imtiaj
         </h1>
       </div>
-     <List>
         <NavLink
           to="/dashboard"
           className={({ isActive, isPending }) =>
@@ -111,6 +111,8 @@ export function LgSidebar() {
             All-Users
           </div>
         </NavLink>
+        </List>
+        <List>
       <NavLink
           to="/"
           className={({ isActive, isPending }) =>

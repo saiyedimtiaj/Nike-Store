@@ -37,6 +37,11 @@ async function run() {
       res.send(result);
     });
 
+    app.get('/dashboard-allProduct',async(req,res)=>{
+      const result = await allProductsColluction.find().toArray()
+      res.send(result)
+    })
+
     app.get("/products/:id", async (req, res) => {
       const id = req.params.id;
       const filter = { _id: new ObjectId(id) };
