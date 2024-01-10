@@ -58,7 +58,7 @@ export function LgSidebar() {
           </div>
         </NavLink>
         <NavLink
-          to="/add-product"
+          to="/dashboard/add-product"
           className={({ isActive, isPending }) =>
             isPending
               ? "pending"

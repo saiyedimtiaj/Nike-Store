@@ -11,6 +11,7 @@ import Cancel from "../Pages/Stripe/Cancel";
 import Dashboard from "../Layout/Dashboard";
 import DashboardHome from "../Pages/DashboardHome/DashboardHome";
 import All_Product from "../Pages/Dashboard/All_Product/All_Product";
+import AddProduct from "../Pages/Dashboard/AddProduct/AddProduct";
 
 
 const Routes = createBrowserRouter([
@@ -55,6 +56,10 @@ const Routes = createBrowserRouter([
         {
           path:'/dashboard/all-product',
           element:<All_Product/>
+        },
+        {
+          path:'/dashboard/add-product',
+          element:<AddProduct/>
         }
       ]
     },

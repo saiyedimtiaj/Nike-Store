@@ -1,7 +1,6 @@
 import CartItems from "../../Components/CartItems/CartItems";
-import useAxiosPublic from "../../hooks/UseAxiosPublic";
+import useAxiosPublic from "../../hooks/useAxiosPublic";
 import cartImg from "../../assets/empty-cart.jpg";
-import {loadStripe} from '@stripe/stripe-js';
 import { toast } from "react-hot-toast";
 import { Link } from "react-router-dom";
 import useCart from "../../hooks/useCart";
@@ -35,22 +34,6 @@ const Cart = () => {
       console.log(res.data);
       refetch()
     })
-  }
-
-  const handleChackout = async() => {
-    const stripe = await loadStripe(import.meta.env.VITE_Stripe_Publishable_Key)
-    
-    const responce = await axios.post('/create-checkout-session',cartItems)
-    const session = await responce.data
-
-    const result = stripe.redirectToCheckout({
-      sessionId : session.id
-    })
-
-    if (result.error) {
-      console.error(result.error);
-    }
-    console.log(responce.data);
   }
 
   
@@ -106,7 +89,7 @@ const Cart = () => {
               </div>
 
               {/* BUTTON START */}
-              <button onClick={handleChackout} className="w-full py-4 rounded-full bg-black text-white text-lg font-medium transition-transform active:scale-95 mb-3 hover:opacity-75 flex items-center gap-2 justify-center">
+              <button className="w-full py-4 rounded-full bg-black text-white text-lg font-medium transition-transform active:scale-95 mb-3 hover:opacity-75 flex items-center gap-2 justify-center">
                 Checkout
               </button>
               {/* BUTTON END */}

@@ -27,7 +27,7 @@ export function Sidebar() {
         <Card
           color="transparent"
           shadow={false}
-          className="h-[calc(100vh-2rem)] w-full p-4"
+          className="h-screen w-full p-4"
         >
           <div className="flex justify-between px-4 items-center">
             <img className="w-14" src="../../assets/logo.png" alt="" />

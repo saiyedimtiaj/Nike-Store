@@ -38,7 +38,8 @@ async function run() {
     });
 
     app.get('/dashboard-allProduct',async(req,res)=>{
-      const result = await allProductsColluction.find().toArray()
+      const currentPage = parseInt(req.query.currentPage);
+      const result = await allProductsColluction.find().skip(currentPage * 10).limit(10).toArray()
       res.send(result)
     })
 
@@ -134,45 +135,6 @@ async function run() {
       const result = await cartColluction.deleteOne(query);
       res.send(result);
     });
-
-    app.post('/handle-payment-success', async (req, res) => {
-      const cartItems = req.body;
-    
-      // Save payment details to MongoDB
-      const payment = {
-        session_id: req.body.id,
-        // Add other fields as needed
-      };
-    
-      try {
-        await paymentsCollection.insertOne(payment);
-        res.json({ success: true, message: 'Payment details saved successfully' });
-      } catch (error) {
-        console.error(error);
-        res.status(500).json({ success: false, message: 'Failed to save payment details' });
-      }
-    });
-
-    app.post('/create-checkout-session',async(req,res)=>{
-      const product = req.body;
-      const session = await stripe.checkout.sessions.create({
-        payment_method_types: ['card'],
-        line_items:product.map(product=>({
-          price_data:{
-            currency: "inr",
-            product_data:{
-              name:product.name,
-            },
-            unit_amount:product.price * 100
-          },
-          quantity:product.quantity
-        })),
-        mode:"payment",
-        success_url:'http://localhost:5173/sucess',
-        cancel_url:'http://localhost:5173/cancel'
-      })
-      res.json({id:session.id})
-    })
 
     // {"price":{$gte: 120, $lte: 150}}
 
