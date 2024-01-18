@@ -76,7 +76,6 @@ const AddProduct = () => {
       console.log(body);
     }
   }
-  // some thing change
 
 
   return (
