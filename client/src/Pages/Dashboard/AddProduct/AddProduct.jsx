@@ -7,7 +7,11 @@ const AddProduct = () => {
   const [images,setImages] = useState([])
   const [link,setLink] = useState([])
   const [error,setError] = useState('')
-  const [loading,setLoading] = useState(false)
+  const [loading,setLoading] = useState(false);
+  const [name,setName] = useState('')
+  const [price,setPrice] = useState('')
+  const [category,setCategory] = useState('')
+  const [description,setDescription] = useState('')
 
   const handleSelect = (value) => {
     const filterring = select.find(sel=>sel === value)
@@ -55,7 +59,24 @@ const AddProduct = () => {
     }
   }
 
-  console.log(link);
+  const handleAddProduct = () => {
+    const body = {
+      name:name,
+      price:price,
+      category:category,
+      description:description
+    }
+    if(name === ''){
+      return setError('name field is requird')
+    }
+    else if(price === ''){
+      return setError('price field is requird')
+    }
+    else{
+      console.log(body);
+    }
+  }
+  // some thing change
 
 
   return (
@@ -63,15 +84,15 @@ const AddProduct = () => {
       <div className="flex gap-2 mt-3">
         <div className="w-full">
           <label className="font-semibold">Product Name</label>
-          <input type="text" name="name" className="px-2 py-1 border-2 border-black w-full" />
+          <input onChange={(e)=>setName(e.target.value)} type="text" name="name" className="px-2 py-1 border-2 border-black w-full" />
         </div>
         <div className="w-full">
         <label className="font-semibold">Price</label>
-          <input type="number" name="price" className="px-2 py-1 border-2 border-black w-full" />
+          <input type="number" onChange={(e)=>setPrice(e.target.value)} className="px-2 py-1 border-2 border-black w-full" />
         </div>
         <div className="w-full">
         <label className="font-semibold">Category</label>
-          <select name="category" id="" className="px-2 py-1.5 border-2 border-black w-full" >
+          <select onChange={(e)=>setCategory(e.target.value)} name="category" id="" className="px-2 py-1.5 border-2 border-black w-full" >
               <option value="Men's Shoes">Men's Shoes</option>
               <option value="Women's Shoes">Women's Shoes</option>
               <option value="Running Shoes">Running Shoes</option>
@@ -93,7 +114,7 @@ const AddProduct = () => {
           type="file"
           required
           multiple={true}
-          onChange={(e)=>setImages(e.target.files)}
+          name="file"
           className="file:text-white file:border-1 file:border-black file:outline-none file:py-2 file:px-5 rounded-xl file:bg-black  mb-3 mt-1 text-lg border-2 border-black w-full"
         />
         <button className="bg-black text-white px-5 h-12 rounded font-semibold" onClick={handleUploadPhoto}>Upload</button>
@@ -108,6 +129,11 @@ const AddProduct = () => {
         </div>)}
           </div>
         </div>
+        <div className="w-full mt-2">
+        <label className="font-semibold">Description</label>
+            <textarea onChange={(e)=>setDescription(e.target.value)} className="w-full px-2 py-2 border-2 border-black" cols="30" rows="10"></textarea>
+        </div>
+        <button onClick={handleAddProduct} className="bg-green-600 w-full cursor-pointer py-3 rounded text-white font-medium text-lg my-3">Add Product</button>
     </div>
   );
 };
