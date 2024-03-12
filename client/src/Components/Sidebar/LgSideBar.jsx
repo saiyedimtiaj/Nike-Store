@@ -1,37 +1,35 @@
 import { Card, List } from "@material-tailwind/react";
-import profile from "../../assets/picture.jpg";
-import { NavLink } from "react-router-dom";
-import { BiSolidDashboard,BiLogOut } from "react-icons/bi";
+import { NavLink, useLocation } from "react-router-dom";
+import { BiSolidDashboard, BiLogOut } from "react-icons/bi";
 import { FaBox, FaHome, FaShoppingCart, FaUser } from "react-icons/fa";
 import { IoMdAdd } from "react-icons/io";
+import useAuth from "../../hooks/useAuth";
 
 export function LgSidebar() {
+  const { user } = useAuth();
+  const location = useLocation();
   return (
-    <Card className="min-h-screen flex flex-col justify-between max-w-[20rem] p-4 bg-[#f7d9d9] rounded-none">
-        <List>
-      <div className="flex justify-between px-4 items-center">
-        <img className="w-14" src="../../assets/logo.png" alt="" />
-      </div>
-      <div className="flex mt-3 flex-col items-center">
-        <div
-          className="w-24 h-24 rounded-full bg-cover"
-          style={{ backgroundImage: `url(${profile})` }}
-        />
-        <h1 className="text-xl font-semibold text-black uppercase mt-2">
-          Saiyed Imtiaj
-        </h1>
-      </div>
+    <Card className="min-h-screen flex flex-col justify-between max-w-[20rem] px-4 bg-black text-white rounded-none">
+      <List>
+        <div className="flex mt-3 flex-col items-center">
+          <div
+            className="w-24 h-24 rounded-full bg-cover bg-center"
+            style={{ backgroundImage: `url(${user?.photoURL})` }}
+          />
+          <h1 className="text-xl font-semibold text-white uppercase mt-2">
+            {user?.displayName}
+          </h1>
+        </div>
         <NavLink
           to="/dashboard"
           className={({ isActive, isPending }) =>
             isPending
               ? "pending"
-              : isActive
-              ? "bg-gray-200 px-3 py-2 rounded-md mt-1 text-black font-medium"
-              : "mt-1 hover:bg-gray-200 px-3 py-2 rounded-md text-black font-medium"
+              : isActive && location.pathname.endsWith("/dashboard")
+              ? "bg-gray-800 px-3 py-2 rounded-md mt-1 text-white font-medium"
+              : "mt-1 hover:bg-gray-800 px-3 py-2 rounded-md text-white font-medium"
           }
         >
-          {" "}
           <div className="flex items-center gap-1">
             <span className="text-xl">
               <BiSolidDashboard />
@@ -45,8 +43,8 @@ export function LgSidebar() {
             isPending
               ? "pending"
               : isActive
-              ? "bg-gray-200 px-3 py-2 rounded-md mt-1 text-black font-medium"
-              : "mt-1 hover:bg-gray-200 px-3 py-2 rounded-md text-black font-medium"
+              ? "bg-gray-800 px-3 py-2 rounded-md mt-1 text-white font-medium"
+              : "mt-1 hover:bg-gray-800 px-3 py-2 rounded-md text-white font-medium"
           }
         >
           {" "}
@@ -63,8 +61,8 @@ export function LgSidebar() {
             isPending
               ? "pending"
               : isActive
-              ? "bg-gray-200 px-3 py-2 rounded-md mt-1 text-black font-medium"
-              : "mt-1 hover:bg-gray-200 px-3 py-2 rounded-md text-black font-medium"
+              ? "bg-gray-800 px-3 py-2 rounded-md mt-1 text-white font-medium"
+              : "mt-1 hover:bg-gray-800 px-3 py-2 rounded-md text-white font-medium"
           }
         >
           {" "}
@@ -76,13 +74,13 @@ export function LgSidebar() {
           </div>
         </NavLink>
         <NavLink
-          to="/orders"
+          to="/dashboard/orders"
           className={({ isActive, isPending }) =>
             isPending
               ? "pending"
               : isActive
-              ? "bg-gray-200 px-3 py-2 rounded-md mt-1 text-black font-medium"
-              : "mt-1 hover:bg-gray-200 px-3 py-2 rounded-md text-black font-medium"
+              ? "bg-gray-800 px-3 py-2 rounded-md mt-1 text-white font-medium"
+              : "mt-1 hover:bg-gray-800 px-3 py-2 rounded-md text-white font-medium"
           }
         >
           {" "}
@@ -94,13 +92,13 @@ export function LgSidebar() {
           </div>
         </NavLink>
         <NavLink
-          to="/Users"
+          to="/dashboard/all-users"
           className={({ isActive, isPending }) =>
             isPending
               ? "pending"
               : isActive
-              ? "bg-gray-200 px-3 py-2 rounded-md mt-1 text-black font-medium"
-              : "mt-1 hover:bg-gray-200 px-3 py-2 rounded-md text-black font-medium"
+              ? "bg-gray-800 px-3 py-2 rounded-md mt-1 text-white font-medium"
+              : "mt-1 hover:bg-gray-800 px-3 py-2 rounded-md text-white font-medium"
           }
         >
           {" "}
@@ -111,16 +109,16 @@ export function LgSidebar() {
             All-Users
           </div>
         </NavLink>
-        </List>
-        <List>
-      <NavLink
+      </List>
+      <List>
+        <NavLink
           to="/"
           className={({ isActive, isPending }) =>
             isPending
               ? "pending"
               : isActive
-              ? "bg-gray-200 px-3 py-2 rounded-md mt-1 text-black font-medium"
-              : "mt-1 hover:bg-gray-200 px-3 py-2 rounded-md text-black font-medium"
+              ? "bg-gray-800 px-3 py-2 rounded-md mt-1 text-white font-medium"
+              : "mt-1 hover:bg-gray-800 px-3 py-2 rounded-md text-white font-medium"
           }
         >
           {" "}
@@ -131,8 +129,10 @@ export function LgSidebar() {
             Home
           </div>
         </NavLink>
-        <div className="mt-1 flex gap-1 cursor-pointer items-center font-medium hover:bg-gray-200 px-3 py-2 rounded-md text-black">
-        <span className="text-xl"><BiLogOut/></span>
+        <div className="mt-1 flex gap-1 cursor-pointer items-center font-medium hover:bg-gray-800 px-3 py-2 rounded-md text-white">
+          <span className="text-xl">
+            <BiLogOut />
+          </span>
           Logout
         </div>
       </List>

@@ -1,22 +1,46 @@
+import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import useAxiosPublic from "../../hooks/UseAxiosPublic";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from "react-responsive-carousel";
 import "./style.css";
-import { useState } from "react";
 import useAuth from "../../hooks/useAuth";
 import RelatedProduct from "../../Components/RelatedProduct/RelatedProduct";
 import { toast } from "react-hot-toast";
 import useCart from "../../hooks/useCart";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 
 const Details = () => {
-  const { user } = useAuth();
+  const { user,isMenuOpen } = useAuth();
   const axios = useAxiosPublic();
-  const [cartItems,refetch] = useCart()
+  const [cartItems, refetch] = useCart();
+  const navigate = useNavigate();
   const { id } = useParams();
   const [selectedSize, setSelectedSize] = useState(null);
   const [message, setMessage] = useState("");
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
+
+  const handleThumbClick = (index) => {
+    setActiveImageIndex(index);
+  };
+
+  const handleSelectImage = (index) => {
+    setActiveImageIndex(index);
+  };
+
+  const handlePrevClick = () => {
+    setActiveImageIndex((prevIndex) =>
+      prevIndex === 0 ? product.images.length - 1 : prevIndex - 1
+    );
+  };
+
+  const handleNextClick = () => {
+    setActiveImageIndex((prevIndex) =>
+      prevIndex === product.images.length - 1 ? 0 : prevIndex + 1
+    );
+  };
+
   const allSizes = [
     "UK 6",
     "UK 6.5",
@@ -32,58 +56,63 @@ const Details = () => {
     "Uk 11.5",
   ];
 
-  
   const handleSizeClick = (size) => {
     setSelectedSize(size);
     setMessage(null);
   };
-  
+
   const { data: product = [], isPending } = useQuery({
     queryKey: ["single-product", id],
     queryFn: () => axios.get(`/products/${id}`).then((res) => res.data),
   });
-  
-  const isExist = cartItems.find(item=>item.name === product.name && item.email === user.email)
+
+  const isExist = cartItems.find(
+    (item) => item.name === product.name && item.email === user.email
+  );
 
   const haveSize = product.sizes;
 
   const handleAddToCart = () => {
     const cartItem = {
       name: product?.name,
+      itemId: product._id,
       price: product?.price,
-      image: product.images[0],
+      image: product.images[0].url,
       size: selectedSize,
-      email: user.email,
+      email: user?.email,
       quantity: 1,
       category: product.category,
     };
-    if (selectedSize === null) {
-      setMessage("Size selection is require");
-    } else {
-      if(!isExist){
-        axios
-        .post("/carts", cartItem)
-        .then(() => {
-          refetch()
-          toast.success("Product add in your cart sucessfully", {
+    if (user) {
+      if (selectedSize === null) {
+        setMessage("Size selection is required");
+      } else {
+        if (!isExist) {
+          axios
+            .post("/carts", cartItem)
+            .then(() => {
+              refetch();
+              toast.success("Product added to your cart successfully", {
+                style: {
+                  background: "#333",
+                  color: "#fff",
+                },
+              });
+            })
+            .catch((err) => {
+              console.log(err.message);
+            });
+        } else {
+          toast.error("Product is already in cart", {
             style: {
               background: "#333",
               color: "#fff",
             },
           });
-        })
-        .catch((err) => {
-          console.log(err.message);
-        });
+        }
       }
-      else{
-        toast.error("Product is already in cart", {
-          style: {
-            background: "#333",
-            color: "#fff",
-          },
-        });
-      }
+    } else {
+      return navigate("/signin");
     }
   };
 
@@ -95,19 +124,37 @@ const Details = () => {
     <>
       <div className="max-w-6xl px-5 mt-10 flex flex-col md:flex-row gap-12 mb-16 mx-auto">
         <div className="flex-1 top-[50px]">
-          <Carousel
-            className="productCarousel"
-            showIndicators={false}
-            showStatus={false}
-            infiniteLoop={true}
-            thumbWidth={60}
-          >
-            {product.images?.map((image, index) => (
-              <div key={index}>
-                <img src={image} alt="" />
-              </div>
-            ))}
-          </Carousel>
+          <div className={isMenuOpen ? 'hidden' : 'carouselContainer relative'}>
+            <Carousel
+              className="productCarousel"
+              showIndicators={false}
+              showStatus={false}
+              infiniteLoop={true}
+              thumbWidth={60}
+              selectedItem={activeImageIndex}
+              onChange={handleSelectImage}
+            >
+              {product.images?.map((image, index) => (
+                <div key={index} onClick={() => handleThumbClick(index)}>
+                  <img src={image.url} alt="" />
+                </div>
+              ))}
+            </Carousel>
+            <div className="carouselButtons flex gap-1 absolute bottom-24  right-2 md:bottom-2 z-50">
+              <button
+                className="carouselButton prevButton bg-blue-gray-50 rounded-full p-2"
+                onClick={handlePrevClick}
+              >
+                <FaChevronLeft size={19} />
+              </button>
+              <button
+                className="carouselButton nextButton bg-blue-gray-50 rounded-full p-2"
+                onClick={handleNextClick}
+              >
+                 <FaChevronRight size={19} />
+              </button>
+            </div>
+          </div>
         </div>
         <div className="flex-1">
           <div className="max-w-xs">
@@ -148,7 +195,7 @@ const Details = () => {
           </div>
         </div>
       </div>
-      <RelatedProduct category={product.category} />
+      {!isMenuOpen && <RelatedProduct category={product.category} />}
     </>
   );
 };

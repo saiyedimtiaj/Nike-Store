@@ -1,11 +1,12 @@
 import { FcGoogle } from "react-icons/fc";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import { toast } from "react-hot-toast";
 
 const Signin = () => {
   const { signin, google } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation()
 
   const handleSignin = (e) => {
     e.preventDefault();
@@ -14,7 +15,7 @@ const Signin = () => {
     const password = form.password.value;
     signin(email, password)
       .then(() => {
-        navigate("/");
+        navigate(location?.state ? location.state : '/');
         toast.success("Sign In Your Account Sucessfully", {
           style: {
             background: "#333",
@@ -23,7 +24,7 @@ const Signin = () => {
         });
       })
       .catch((err) => {
-        console.log(err.message);
+       toast.error(err.message);
       });
   };
 

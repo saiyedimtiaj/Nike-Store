@@ -6,12 +6,17 @@ import Cart from "../Pages/Cart/Cart";
 import AllProducts from "../Pages/AllProducts/AllProducts";
 import Signin from "../Pages/Signin/Signin";
 import Signup from "../Pages/Signup/Signup";
-import Sucess from "../Pages/Stripe/Sucess";
-import Cancel from "../Pages/Stripe/Cancel";
 import Dashboard from "../Layout/Dashboard";
 import DashboardHome from "../Pages/DashboardHome/DashboardHome";
 import All_Product from "../Pages/Dashboard/All_Product/All_Product";
 import AddProduct from "../Pages/Dashboard/AddProduct/AddProduct";
+import Orders from "../Pages/Dashboard/Orders/Orders";
+import Payment from "../Pages/Payment/Payment";
+import AllUsers from "../Pages/Dashboard/AllUsers/AllUsers";
+import PrivateRoutes from "./PrivateRoutes";
+import AdminRoute from "./AdminRoute";
+import Edit from "../Pages/Dashboard/Edit/Edit";
+import News from "../Pages/News/News";
 
 
 const Routes = createBrowserRouter([
@@ -28,6 +33,10 @@ const Routes = createBrowserRouter([
           element:<AllProducts/>
         },
         {
+          path:'/news',
+          element:<News/>
+        },
+        {
           path:'/product/:id',
           element:<Details/>
         },
@@ -36,30 +45,38 @@ const Routes = createBrowserRouter([
           element:<Cart/>
         },
         {
-          path:'/sucess',
-          element:<Sucess/>,
+          path:'/payment',
+          element:<PrivateRoutes><Payment/></PrivateRoutes>
         },
-        {
-          path:'/cancel',
-          element:<Cancel/>
-        }
       ]
     },
     {
       path:'/dashboard',
-      element:<Dashboard/>,
+      element:<AdminRoute><Dashboard/></AdminRoute>,
       children:[
         {
           path:'/dashboard',
-          element:<DashboardHome/>
+          element:<AdminRoute><DashboardHome/></AdminRoute>
         },
         {
           path:'/dashboard/all-product',
-          element:<All_Product/>
+          element:<AdminRoute><All_Product/></AdminRoute>
         },
         {
           path:'/dashboard/add-product',
-          element:<AddProduct/>
+          element:<AdminRoute><AddProduct/></AdminRoute>
+        },
+        {
+          path:'/dashboard/orders',
+          element:<AdminRoute><Orders/></AdminRoute>
+        },
+        {
+          path:'/dashboard/all-users',
+          element:<AdminRoute><AllUsers/></AdminRoute>
+        },
+        {
+          path:'/dashboard/all-product/:id/edit',
+          element:<Edit/>
         }
       ]
     },

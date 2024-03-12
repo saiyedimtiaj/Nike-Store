@@ -9,7 +9,7 @@ import {
 const News = () => {
   return (
     <div
-      className="w-full h-400 flex items-center bg-cover bg-center bg-f9f9f9 relative"
+      className="w-full h-400 flex items-center bg-cover bg-center bg-f9f9f9 relativ -z-50"
       style={{ backgroundImage: `url("${newslatter}")` }}
     >
       <div className="w-max flex flex-col items-center mx-auto text-center py-6">

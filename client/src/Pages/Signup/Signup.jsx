@@ -1,29 +1,67 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import { toast } from "react-hot-toast";
+import axios from "axios";
+import useAxiosPublic from "../../hooks/UseAxiosPublic";
+import { useState } from "react";
 
 const Signup = () => {
-  const {register} = useAuth();
+  const {register,profile} = useAuth();
   const navigate = useNavigate()
+  const location = useLocation()
+  const [profileImage,setProfileImage] = useState('')
+  const axiosPublic = useAxiosPublic()
 
-  const handleSignup = e => {
+
+  const handleImage = async (e) => {
+    const image = e.target.files[0]
+
+    const formData = new FormData()
+    formData.append('file',image)
+    formData.append("upload_preset", "nikeStore");
+    const {data} = await axios.post("https://api.cloudinary.com/v1_1/ddhb3f9rg/image/upload",formData)
+    setProfileImage(data.url);
+  }
+
+  const handleSignup = async(e) => {
     e.preventDefault()
     const form = e.target;
+    const name = form.name.value;
     const email = form.email.value;
     const password = form.password.value;
-    register(email,password)
+
+    if(profileImage === ''){
+      return
+    }
+    else{
+      register(email,password)
     .then(()=>{
-      navigate('/')
-      toast.success("Create Your Account Sucessfully", {
-        style: {
-          background: "#333",
-          color: "#fff",
-        },
-      });
+      navigate(location?.state ? location.state : '/');
+      profile(name,profileImage)
+      .then(()=>{
+        const userInfo = {
+          name:name,
+          email:email,
+          profile: profileImage,
+          price: 0,
+          role:'user'
+        }
+        axiosPublic.post('/users',userInfo)
+        .then(()=>{
+          toast.success("Create Your Account Sucessfully", {
+            style: {
+              background: "#333",
+              color: "#fff",
+            },
+          });
+        })
+      })
     })
     .catch(err=>{
-      console.log(err.message);
+      toast.error(err.message);
     })
+    }
+    
   }
 
   return (
@@ -47,7 +85,8 @@ const Signup = () => {
         <input
           type="file"
           required
-          name="name"
+          name="image"
+          onChange={handleImage}
           className="file:text-white file:border-1 file:border-black file:outline-none file:py-2 file:px-5 rounded-xl file:bg-black  mb-3 mt-1 text-lg border-2 border-black w-full"
         />
         <label htmlFor="email" className="text-base font-semibold">

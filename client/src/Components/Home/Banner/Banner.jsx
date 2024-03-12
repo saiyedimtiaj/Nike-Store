@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 
 const Banner = () => {
   return (
-    <div className="text-white relative text-xl container mx-auto">
+    <div className="text-white relative -z-50 text-xl container mx-auto">
       <Carousel
         autoPlay={true}
         infiniteLoop={true}

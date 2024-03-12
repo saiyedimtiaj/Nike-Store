@@ -1,14 +1,22 @@
 const express = require("express");
-const cors = require("cors");
 require("dotenv").config();
+const cors = require("cors");
+const jwt = require("jsonwebtoken");
+const cookieParser = require("cookie-parser");
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 const app = express();
-const port = process.env.PORT || 5000;
-
-app.use(cors());
+app.use(
+  cors({
+    origin: ["http://localhost:5173"],
+    credentials: true,
+  })
+);
 app.use(express.json());
+app.use(cookieParser());
+
+const port = process.env.PORT || 5000;
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.xslrw3a.mongodb.net/?retryWrites=true&w=majority`;
 
@@ -28,6 +36,22 @@ async function run() {
 
     const allProductsColluction = client.db("nike").collection("allproduct");
     const cartColluction = client.db("nike").collection("cart");
+    const userColluction = client.db("nike").collection("user");
+    const orderColluction = client.db("nike").collection("order");
+
+    app.post("/jwt", async (req, res) => {
+      const user = req.body;
+      const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
+        expiresIn: "10d",
+      });
+      res
+        .cookie("access_token", token, {
+          httpOnly: true,
+          secure: true,
+          sameSite: "none",
+        })
+        .send({ message: "sucess" });
+    });
 
     app.get("/products", async (req, res) => {
       const result = await allProductsColluction
@@ -37,11 +61,28 @@ async function run() {
       res.send(result);
     });
 
-    app.get('/dashboard-allProduct',async(req,res)=>{
+    app.post("/products", async (req, res) => {
+      const body = req.body;
+      const result = await allProductsColluction.insertOne(body);
+      res.send(result);
+    });
+
+    app.delete("/products/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await allProductsColluction.deleteOne(query);
+      res.send(result);
+    });
+
+    app.get("/dashboard-allProduct", async (req, res) => {
       const currentPage = parseInt(req.query.currentPage);
-      const result = await allProductsColluction.find().skip(currentPage * 10).limit(10).toArray()
-      res.send(result)
-    })
+      const result = await allProductsColluction
+        .find()
+        .skip(currentPage * 10)
+        .limit(10)
+        .toArray();
+      res.send(result);
+    });
 
     app.get("/products/:id", async (req, res) => {
       const id = req.params.id;
@@ -65,12 +106,20 @@ async function run() {
       res.send(result);
     });
 
+    app.get("/dashboardCount", async (req, res) => {
+      const product = await allProductsColluction.estimatedDocumentCount();
+      const user = await userColluction.estimatedDocumentCount();
+      const order = await orderColluction.estimatedDocumentCount();
+      res.send({ product, user, order });
+    });
+
     app.get("/productcount", async (req, res) => {
       const count = await allProductsColluction.estimatedDocumentCount();
       res.send({ count });
     });
 
     app.get("/allproduct", async (req, res) => {
+      const { minVal, maxVal } = req?.query;
       const projection = {
         _id: 1,
         name: 1,
@@ -80,12 +129,11 @@ async function run() {
         category: 1,
       };
       const currentPage = parseInt(req.query.currentPage);
-      let category = {}
-      if(req.query?.category === 'all'){
-        category = {}
-      }
-      else{
-        category.category = req.query?.category
+      let query = {};
+      if (req.query?.category === "all") {
+        query = {};
+      } else {
+        query.category = req.query?.category;
       }
       const sortObj = {};
       const sortField = req.query.sortField;
@@ -93,14 +141,32 @@ async function run() {
       if (sortField && sortBy) {
         sortObj[sortField] = sortBy;
       }
+      if (minVal && maxVal) {
+        query.price = { $gte: parseInt(minVal), $lte: parseInt(maxVal) };
+        console.log(minVal, maxVal);
+      }
       const result = await allProductsColluction
-        .find(category)
+        .find(query)
         .sort(sortObj)
         .project(projection)
         .skip(currentPage * 6)
         .limit(6)
         .toArray();
       res.send(result);
+    });
+
+    app.put("/products/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const body = req.body;
+      const options = { upsert: true };
+      const updateDoc = {
+        $set: {
+          ...body,
+        },
+      };
+      const result = await allProductsColluction.updateOne(filter,updateDoc,options)
+      res.send(result)
     });
 
     app.post("/carts", async (req, res) => {
@@ -120,9 +186,11 @@ async function run() {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const options = { upsert: true };
+      const cartItem = await cartColluction.findOne(query);
       const updateDoc = {
         $set: {
           quantity: req.body.quantity,
+          price: cartItem.price * parseInt(req.body.quantity),
         },
       };
       const result = await cartColluction.updateOne(query, updateDoc, options);
@@ -133,6 +201,56 @@ async function run() {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await cartColluction.deleteOne(query);
+      res.send(result);
+    });
+
+    app.post("/users", async (req, res) => {
+      const body = req.body;
+      const result = await userColluction.insertOne(body);
+      res.send(result);
+    });
+
+    app.get("/users/:email", async (req, res) => {
+      const email = req.params.email;
+      const filter = { email: email };
+      const result = await userColluction.findOne(filter);
+      res.send(result);
+    });
+
+    app.get("/users", async (req, res) => {
+      const result = await userColluction.find().toArray();
+      res.send(result);
+    });
+
+    app.post("/create-payment-intent", async (req, res) => {
+      const { price } = req.body;
+      const amount = parseInt(price * 100);
+
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: amount,
+        currency: "usd",
+        payment_method_types: ["card"],
+      });
+
+      res.send({
+        clientSecret: paymentIntent.client_secret,
+      });
+    });
+
+    app.post("/orders", async (req, res) => {
+      const body = req.body;
+      const orderResult = await orderColluction.insertOne(body);
+      const query = {
+        _id: {
+          $in: body.cartId.map((id) => new ObjectId(id)),
+        },
+      };
+      const cartResult = await cartColluction.deleteMany(query);
+      res.send({ orderResult, cartResult });
+    });
+
+    app.get("/orders", async (req, res) => {
+      const result = await orderColluction.find().toArray();
       res.send(result);
     });
 
