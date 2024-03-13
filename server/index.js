@@ -254,7 +254,6 @@ async function run() {
       res.send(result);
     });
 
-    // {"price":{$gte: 120, $lte: 150}}
 
     client.db("admin").command({ ping: 1 });
     console.log(
