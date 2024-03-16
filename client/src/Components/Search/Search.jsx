@@ -22,7 +22,6 @@ const Search = ({ setShowSearch }) => {
         navegate(`/product/${id}`)
         setShowSearch(false)
       }
-      console.log(product);
 
   return (
     <div className="fixed w-full h-full z-50 top-0 left-0 bg-white text-black search-modal">
@@ -41,10 +40,10 @@ const Search = ({ setShowSearch }) => {
       <div className="max-w-3xl mx-auto px-4 mt-5">
         {
             searchQuery.length > 0 && product?.map(product=>  <div onClick={()=>handleProductDetails(product?._id)} key={product?._id} className="flex items-center gap-3 py-2 border-b border-gray-700 px-3 cursor-pointer">
-            <img className="w-12" src={product?.images[0]} alt="" />
+            <img className="w-12" src={product?.images[0].url} alt="" />
               <div>
                   <h5 className="text-xl font-semibold">{product?.name}</h5>
-                  <p className="whitespace-nowrap max-w-[640px] overflow-hidden text-ellipsis text-sm">{product?.description}</p>
+                  <p className="whitespace-nowrap max-w-[100px] md:max-w-[640px] md:overflow-hidden text-ellipsis pr-2 text-sm">{product?.description}</p>
               </div>
             </div>)
         }

@@ -9,13 +9,13 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const app = express();
 app.use(
   cors({
-    origin: ["http://localhost:5173"],
+    origin: ["https://mern-stack-nike-ecomarce.netlify.app"],
     credentials: true,
   })
 );
 app.use(express.json());
 app.use(cookieParser());
-
+// "http://localhost:5173"
 const port = process.env.PORT || 5000;
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.xslrw3a.mongodb.net/?retryWrites=true&w=majority`;
@@ -250,7 +250,12 @@ async function run() {
     });
 
     app.get("/orders", async (req, res) => {
-      const result = await orderColluction.find().toArray();
+      const query = {}
+      const sortBy = req.query?.soryby
+      if(sortBy){
+        query.date = -1
+      }
+      const result = await orderColluction.find().sort(query).toArray();
       res.send(result);
     });
 

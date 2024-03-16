@@ -1,20 +1,24 @@
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { useEffect, useState } from "react";
-import useAxiosPublic from "../../hooks/UseAxiosPublic";
 import useCart from "../../hooks/useCart";
 import useAuth from "../../hooks/useAuth";
 import moment from "moment/moment";
 import "./Style.css"
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
+import useAxiosPublic from "../../hooks/useAxiosPublic";
 
 const ChackoutFrom = () => {
   const stripe = useStripe();
   const elements = useElements();
-  const { user } = useAuth();
+  const { user,isMenuOpen } = useAuth();
   const [transactionId, setTransactionId] = useState();
   const [clientSecret, setClientSecret] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false); // Add loading state
   const axios = useAxiosPublic();
   const [cartItems] = useCart();
+  const navigate = useNavigate()
 
   const totalPrice = cartItems.reduce((total, item) => total + item.price, 0);
 
@@ -41,6 +45,8 @@ const ChackoutFrom = () => {
       return;
     }
 
+    setLoading(true); // Start loading
+
     const { error, paymentMethod } = await stripe.createPaymentMethod({
       type: "card",
       card,
@@ -49,42 +55,49 @@ const ChackoutFrom = () => {
     if (error) {
       console.log("[error]", error);
       setError(error.message);
+      setLoading(false); // Stop loading
     } else {
       console.log("[PaymentMethod]", paymentMethod);
       setError("");
-    }
 
-    const { paymentIntent, error: confirmError } =
-      await stripe.confirmCardPayment(clientSecret, {
-        payment_method: {
-          card: card,
-          billing_details: {
-            name: user?.displayName || "anonymous",
-            email: user?.email || "anonymous",
+      const { paymentIntent, error: confirmError } =
+        await stripe.confirmCardPayment(clientSecret, {
+          payment_method: {
+            card: card,
+            billing_details: {
+              name: user?.displayName || "anonymous",
+              email: user?.email || "anonymous",
+            },
           },
-        },
-      });
-
-    if (confirmError) {
-      console.log(confirmError, "payment error");
-    } else {
-      console.log(paymentIntent, "payment intent");
-      if (paymentIntent.status === "succeeded") {
-        const payment = {
-          email: user?.email,
-          price: totalPrice,
-          date: moment().format("LLL"),
-          cartId: cartItems.map((item) => item._id),
-          productId: cartItems.map((item) => item.itemId),
-          images: cartItems.map((item) => item.image),
-          transactionId: transactionId,
-        };
-        axios.post("/orders", payment).then((res) => {
-          console.log(res.data);
         });
+
+      if (confirmError) {
+        console.log(confirmError, "payment error");
+        setLoading(false); // Stop loading
+      } else {
+        console.log(paymentIntent, "payment intent");
+        if (paymentIntent.status === "succeeded") {
+          const payment = {
+            email: user?.email,
+            userName:user?.displayName,
+            profile:user?.photoURL,
+            price: totalPrice,
+            date: moment().format("LLL"),
+            cartId: cartItems.map((item) => item._id),
+            productId: cartItems.map((item) => item.itemId),
+            images: cartItems.map((item) => item.image),
+            transactionId: transactionId,
+          };
+          axios.post("/orders", payment).then((res) => {
+            toast.success('payment sucessfully')
+            navigate('/cart')
+            setLoading(false); // Stop loading
+          });
+        }
       }
     }
   };
+
   return (
     <div className="flex flex-col lg:flex-row gap-4">
       <div className="flex-1">
@@ -107,7 +120,7 @@ const ChackoutFrom = () => {
         <input type="text" defaultValue={user?.email} required className="border-2 border-black w-full px-3 py-1.5 mb-3" />
         <form onSubmit={handleSubmit}>
         <h6 className="text-gray-700 mt-1 font-medium">Card Information</h6>
-          <CardElement className="px-3 w-full py-2 border-2 border-black flex flex-col"
+          {!isMenuOpen && <CardElement className="px-3 w-full py-2 border-2 border-black flex flex-col"
             options={{
               style: {
                 base: {
@@ -122,13 +135,13 @@ const ChackoutFrom = () => {
                 },
               },
             }}
-          />
+          />}
           <button
             disabled={!clientSecret || !stripe}
             className="px-5 py-2 mt-4 bg-black text-white rounded-md"
             type="submit"
           >
-            Pay
+            {loading ? 'Processing...' : 'Pay'}
           </button>
         </form>
         <p>{error}</p>

@@ -1,5 +1,3 @@
-import { FaSitemap,FaUser,FaShoppingCart,FaMoneyCheck } from "react-icons/fa";
-import useAxiosPublic from "../../hooks/UseAxiosPublic";
 import { useEffect, useState } from "react";
 import useAuth from "../../hooks/useAuth";
 import { IoStatsChartSharp } from "react-icons/io5";
@@ -7,6 +5,9 @@ import { FaUsers } from "react-icons/fa6";
 import { FaShippingFast } from "react-icons/fa";
 import sniker from '../../assets/sneaker.png'
 import CountUp from "react-countup";
+import Chart from "../../Components/Chart/Chart";
+import Recent from "../../Components/RecentOrders/Recent";
+import useAxiosPublic from "../../hooks/useAxiosPublic";
 
 const DashboardHome = () => {
   const axios = useAxiosPublic()
@@ -19,7 +20,6 @@ const DashboardHome = () => {
       setDataInfo(res.data)
     })
   },[])
-
   
   
   useEffect(()=>{
@@ -31,6 +31,7 @@ const DashboardHome = () => {
 
   const totalRevenue = orderData.reduce((total,item)=>total + item.price,0)
   const total = totalRevenue.toFixed(1)
+
 
   return (
     <div className="mt-3">
@@ -85,6 +86,14 @@ const DashboardHome = () => {
                     duration={5}
                 /></h1>
             </div>
+        </div>
+      </div>
+      <div className="mt-5 flex gap-5 flex-col md:flex-row">
+        <div className="w-full lg:w-2/3">
+          <Chart orderData={orderData} />
+        </div>
+        <div className="w-full lg:w-1/3">
+          <Recent/>
         </div>
       </div>
     </div>

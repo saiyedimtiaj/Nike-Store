@@ -29,6 +29,7 @@
     "react-responsive-carousel": "^3.2.23",
     "react-router-dom": "^6.20.1",
     "react-slider": "^2.0.6",
+    "recharts": "^2.12.3",
     "rsuite": "^5.48.0",
     "sweetalert2": "^11.10.4"
   },

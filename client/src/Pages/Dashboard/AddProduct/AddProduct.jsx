@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { toast } from "react-hot-toast";
-import useAxiosPublic from "../../../hooks/UseAxiosPublic";
 import AddMultiImages from "../../../Components/AddMultiImages/AddMultiImages";
 import { Link } from "react-router-dom";
 import { MdDashboard } from "react-icons/md";
 import { FaAngleRight } from "react-icons/fa";
+import useAxiosPublic from "../../../hooks/useAxiosPublic";
 
 const AddProduct = () => {
   const [select, setSelect] = useState([]);
