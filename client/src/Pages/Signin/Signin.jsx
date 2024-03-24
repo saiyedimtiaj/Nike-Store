@@ -2,11 +2,13 @@ import { FcGoogle } from "react-icons/fc";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import { toast } from "react-hot-toast";
+import useAxiosPublic from "../../hooks/useAxiosPublic";
 
 const Signin = () => {
-  const { signin, google } = useAuth();
+  const { signin, googleLogin,user } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation()
+  const location = useLocation();
+  const axiosPublic = useAxiosPublic();
 
   const handleSignin = (e) => {
     e.preventDefault();
@@ -15,7 +17,7 @@ const Signin = () => {
     const password = form.password.value;
     signin(email, password)
       .then(() => {
-        navigate(location?.state ? location.state : '/');
+        navigate(location?.state ? location.state : "/");
         toast.success("Sign In Your Account Sucessfully", {
           style: {
             background: "#333",
@@ -24,12 +26,12 @@ const Signin = () => {
         });
       })
       .catch((err) => {
-       toast.error(err.message);
+        toast.error(err.message);
       });
   };
 
   const handleGoogleLogin = () => {
-    google().then(() => {
+    googleLogin().then(() => {
       navigate("/");
       toast.success("Google Sign In Sucessfully", {
         style: {
@@ -37,6 +39,16 @@ const Signin = () => {
           color: "#fff",
         },
       });
+    });
+    const userInfo = {
+      name: user?.displayName,
+      email: user?.email,
+      profile: user?.photoUrl,
+      price: 0,
+      role: "user",
+      createdAt: new Date(),
+    };
+      axiosPublic.post("/users", userInfo).then(() => {
     });
   };
 

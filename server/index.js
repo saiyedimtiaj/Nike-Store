@@ -1,7 +1,6 @@
 const express = require("express");
 require("dotenv").config();
 const cors = require("cors");
-const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
@@ -9,13 +8,13 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const app = express();
 app.use(
   cors({
-    origin: ["https://mern-stack-nike-ecomarce.netlify.app"],
-    credentials: true,
+    origin: ["https://mern-stack-nike-ecomarce.netlify.app"]
   })
 );
 app.use(express.json());
 app.use(cookieParser());
-// "http://localhost:5173"
+
+//  "http://localhost:5173"
 const port = process.env.PORT || 5000;
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.xslrw3a.mongodb.net/?retryWrites=true&w=majority`;
@@ -39,19 +38,6 @@ async function run() {
     const userColluction = client.db("nike").collection("user");
     const orderColluction = client.db("nike").collection("order");
 
-    app.post("/jwt", async (req, res) => {
-      const user = req.body;
-      const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
-        expiresIn: "10d",
-      });
-      res
-        .cookie("access_token", token, {
-          httpOnly: true,
-          secure: true,
-          sameSite: "none",
-        })
-        .send({ message: "sucess" });
-    });
 
     app.get("/products", async (req, res) => {
       const result = await allProductsColluction
@@ -165,8 +151,12 @@ async function run() {
           ...body,
         },
       };
-      const result = await allProductsColluction.updateOne(filter,updateDoc,options)
-      res.send(result)
+      const result = await allProductsColluction.updateOne(
+        filter,
+        updateDoc,
+        options
+      );
+      res.send(result);
     });
 
     app.post("/carts", async (req, res) => {
@@ -205,14 +195,22 @@ async function run() {
     });
 
     app.post("/users", async (req, res) => {
-      const body = req.body;
-      const result = await userColluction.insertOne(body);
-      res.send(result);
+      const body = req.body
+      const filter = { email: req?.body?.email };
+      console.log(filter);
+     
+      const query = await userColluction.findOne(filter);
+      if (query) {
+        return res.status(400).json({ message: "User with this email already exists" });
+      } 
+        const result = await userColluction.insertOne(body);
+        res.send(result);
     });
 
-    app.get("/users/:email", async (req, res) => {
-      const email = req.params.email;
+    app.get("/users", async (req, res) => {
+      const email = req?.query?.email;
       const filter = { email: email };
+      console.log(filter);
       const result = await userColluction.findOne(filter);
       res.send(result);
     });
@@ -250,15 +248,14 @@ async function run() {
     });
 
     app.get("/orders", async (req, res) => {
-      const query = {}
-      const sortBy = req.query?.soryby
-      if(sortBy){
-        query.date = -1
+      const query = {};
+      const sortBy = req.query?.soryby;
+      if (sortBy) {
+        query.date = -1;
       }
       const result = await orderColluction.find().sort(query).toArray();
       res.send(result);
     });
-
 
     client.db("admin").command({ ping: 1 });
     console.log(

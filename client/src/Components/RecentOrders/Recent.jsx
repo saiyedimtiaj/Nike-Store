@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import useAxiosPublic from "../../hooks/useAxiosPublic";
+import useAxiosPublic from "../../hooks/UseAxiosPublic";
 
 const Recent = () => {
   const [order, setOrder] = useState();
@@ -8,8 +8,6 @@ const Recent = () => {
   useEffect(() => {
     axios.get("/orders?soryby=asc").then((res) => setOrder(res.data));
   }, [axios]);
-
-  console.log(order);
 
   return (
     <div>

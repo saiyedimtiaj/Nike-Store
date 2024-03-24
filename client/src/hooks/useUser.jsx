@@ -8,7 +8,7 @@ const useUser = () => {
     const { data: userInfo = [],isPending } = useQuery({
         queryKey: ["is-admin", user?.email],
         queryFn: () =>
-          axios.get(`/users/${user?.email}`).then((res) => res.data),
+          axios.get(`/users?email=${user?.email}`).then((res) => res.data),
       });
       return [userInfo,isPending]
 };

@@ -8,13 +8,17 @@ const AdminRoute = ({children}) => {
     const location = useLocation()
     const [userInfo,isPending] = useUser()
 
-    if(loading || isPending){
-        return <p>Loading.....</p>
+    console.log(userInfo);
+
+    if (loading || isPending) {
+        return <p>Loading.....</p>;
     }
-    if(user && userInfo.role === 'admin'){
-        return children
+    
+    if (!user || !userInfo || userInfo.role !== 'admin') {
+        return <Navigate to="/signin" state={location.pathname } replace />;
     }
-    return <Navigate to='/signin' state={location.pathname} replace />
+    
+    return children;
 };
 
 export default AdminRoute;

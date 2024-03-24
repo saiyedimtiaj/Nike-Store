@@ -2,8 +2,8 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import { toast } from "react-hot-toast";
 import axios from "axios";
-import useAxiosPublic from "../../hooks/UseAxiosPublic";
 import { useState } from "react";
+import useAxiosPublic from "../../hooks/UseAxiosPublic";
 
 const Signup = () => {
   const {register,profile} = useAuth();
@@ -44,7 +44,8 @@ const Signup = () => {
           email:email,
           profile: profileImage,
           price: 0,
-          role:'user'
+          role:'user',
+          createdAt: new Date()
         }
         axiosPublic.post('/users',userInfo)
         .then(()=>{

@@ -31,7 +31,8 @@ const AuthProvider = ({children}) => {
         return signOut(Auth)
     }
 
-    const google = () => {
+    const googleLogin = () => {
+        setLoading(true);
         return signInWithPopup(Auth,provider)
     }
 
@@ -47,16 +48,7 @@ const AuthProvider = ({children}) => {
         const subscribe = onAuthStateChanged(Auth,(currentUser)=>{
             console.log(currentUser);
             setUser(currentUser)
-            if(currentUser){
-                setLoading(false)
-                axiosPub.post('/jwt',{email:currentUser?.email})
-        .then(res=>{
-          console.log(res.data);
-        })
-        .catch(err=>{
-          console.log(err);
-        })
-            }
+            setLoading(false)
         })
         return () => {
             return subscribe
@@ -64,7 +56,7 @@ const AuthProvider = ({children}) => {
     },[axiosPub])
 
     const userInfo = {
-        signin,register,user,logout,google,profile,loading,isMenuOpen, setIsMenuOpen
+        signin,register,user,logout,googleLogin,profile,loading,isMenuOpen, setIsMenuOpen
     }
 
 
