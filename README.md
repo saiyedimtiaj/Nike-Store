@@ -4,7 +4,39 @@
 Welcome to our Room Booking Website repository! Here you'll find everything you need to know about our platform, designed to provide users with a seamless booking experience.
 
 ## Features:
+### Authentication System
 
+We employ a secure authentication system to protect user accounts and data integrity.
+### Dynamic Design
+
+Our website features a dynamic and responsive design, ensuring an optimal user experience across various devices.
+### Image Upload System
+
+Easily upload images of your products to showcase them effectively to users.
+### Landing Page
+
+Our landing page features a captivating carousel, highlighting best-selling collections, and includes a newsletter section for users to stay updated.
+### Dynamic Product Search Bar
+
+Users can search for any product using our dynamic search bar, making it convenient to find what they need.
+### Product Page
+
+The product page offers various features including sorting options, category sections, a price slider, and beautiful pagination for easy navigation.
+### Product Details Page
+
+View detailed information about each product, including a carousel of product images and options for size selection before adding to the cart.
+### Cart Page
+
+Users can view all added items to their cart, and easily proceed to checkout with the option to purchase using Stripe payment.
+### Admin Role System
+
+Administrators have access to a dashboard where they can monitor total revenue, shipped orders, total products, and view the status of orders from the past six months.
+### Product Management
+
+Admins can manage all products, including viewing, editing, and deleting them. They can also add new products by providing all required details.
+### Order Page
+
+Admins have access to detailed order information, allowing them to track and manage orders efficiently.
 
 # Get Started
 
