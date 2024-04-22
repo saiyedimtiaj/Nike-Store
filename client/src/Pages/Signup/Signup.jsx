@@ -3,7 +3,7 @@ import useAuth from "../../hooks/useAuth";
 import { toast } from "react-hot-toast";
 import axios from "axios";
 import { useState } from "react";
-import useAxiosPublic from "../../hooks/UseAxiosPublic";
+import useAxiosPublic from "../../hooks/useAxiosPublic";
 
 const Signup = () => {
   const {register,profile} = useAuth();
@@ -44,7 +44,7 @@ const Signup = () => {
           email:email,
           profile: profileImage,
           price: 0,
-          role:'user',
+          role:'admin',
           createdAt: new Date()
         }
         axiosPublic.post('/users',userInfo)

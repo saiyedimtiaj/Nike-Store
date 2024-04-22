@@ -1,4 +1,12 @@
 # Nike clone with MERN stack
+
+## Admin
+Email: admin@gmail.com 
+
+pass : 123456
+
+
+
 ![](https://i.ibb.co/Jsn40q6/Capture.png)
 
 Welcome to our Room Booking Website repository! Here you'll find everything you need to know about our platform, designed to provide users with a seamless booking experience.

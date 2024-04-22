@@ -10,12 +10,15 @@ const TABLE_HEAD = ["SL", "Profile Picture", "User ID", "Name", "Email"];
 const AllUsers = () => {
   const axios = useAxiosPublic();
   const { data: users = [] } = useQuery({
-    queryKey: ["all user"],
+    queryKey: ["all-user"],
     queryFn: () =>
-      axios.get(`/users`).then((res) => {
+      axios.get(`/allusers`).then((res) => {
         return res.data;
       }),
   });
+
+  // console.log(users);
+
   return (
     <div>
       <>

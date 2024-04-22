@@ -215,7 +215,7 @@ async function run() {
       res.send(result);
     });
 
-    app.get("/users", async (req, res) => {
+    app.get("/allusers", async (req, res) => {
       const result = await userColluction.find().toArray();
       res.send(result);
     });
